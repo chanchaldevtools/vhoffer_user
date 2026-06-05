@@ -24,6 +24,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import { AuthContext } from '../../App';
 import apiClient from '../services/apiConfig';
 import Svg, { Path, Circle, Rect } from 'react-native-svg';
+import RenderHtml from 'react-native-render-html';
 
 const { width, height } = Dimensions.get('window');
 
@@ -139,6 +140,7 @@ const ProfileScreen = () => {
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
   const [legalModalVisible, setLegalModalVisible] = useState(false);
   const [legalContent, setLegalContent] = useState({ title: '', body: '' });
+  const [isLoadingLegal, setIsLoadingLegal] = useState(false);
 
   // Animation Timing Drivers
   const editSlideAnim = useRef(new Animated.Value(height)).current;
@@ -289,20 +291,59 @@ const ProfileScreen = () => {
     }
   };
 
-  const openLegalModal = (type) => {
-    let title = '', body = '';
+  const openLegalModal = async (type) => {
+    let title = '', contentFor = '';
     if (type === 'privacy') {
       title = 'Privacy Policy';
-      body = 'Your security data infrastructure remains strictly audited. Personal operational background logs are cached inside safe local storage modules securely encrypted.\n\nWe do not map runtime analytics parameters to public nodes.';
+      contentFor = 'privacy_policy';
     } else if (type === 'safety') {
       title = 'Safety Policy';
-      body = 'Active tracking operations configure dynamic foreground processes keeping operational telemetry reliable.\n\nAlways secure parameters properly prior to shifting deployment operations into transport runtime execution context.';
+      contentFor = 'safety_policy';
     } else {
       title = 'Terms & Conditions';
-      body = 'Usage elements specify that all components match legal structures explicitly configured within platform rates rules configurations.\n\nUnauthorized profile cloning directly terminates secure session verification indices.';
+      contentFor = 'terms_and_conditions';
     }
-    setLegalContent({ title, body });
+    
+    // Show modal immediately with loading state
+    setLegalContent({ title, body: '' });
     setLegalModalVisible(true);
+    setIsLoadingLegal(true);
+    
+    try {
+      const formData = new FormData();
+      formData.append('content_for', contentFor);
+      
+      const response = await apiClient.post('/legal-content/get', formData, {
+        headers: { 
+          'Content-Type': 'multipart/form-data',
+          'Accept': 'application/json'
+        },
+      });
+      
+      console.log('Legal content response:', response.data);
+      
+      if (response.data && response.data.success) {
+        let content = '';
+        if (contentFor === 'privacy_policy' && response.data.data.privacy_policy) {
+          content = response.data.data.privacy_policy.content;
+        } else if (contentFor === 'safety_policy' && response.data.data.safety_policy) {
+          content = response.data.data.safety_policy.content;
+        } else if (contentFor === 'terms_and_conditions' && response.data.data.terms_and_conditions) {
+          content = response.data.data.terms_and_conditions.content;
+        }
+        
+        setLegalContent({ title, body: content });
+      } else {
+        showToast('Failed to load legal content', 'error');
+        setLegalModalVisible(false);
+      }
+    } catch (error) {
+      console.error('Error fetching legal content:', error);
+      showToast('Failed to load legal content. Please try again.', 'error');
+      setLegalModalVisible(false);
+    } finally {
+      setIsLoadingLegal(false);
+    }
   };
 
   if (isLoading) {
@@ -500,19 +541,71 @@ const ProfileScreen = () => {
       </Modal>
 
       {/* 3. Legal & Compliance Full View Bottom Sheet */}
-      <Modal visible={legalModalVisible} transparent animationType="fade" onRequestClose={() => setLegalModalVisible(false)}>
-        <TouchableWithoutFeedback onPress={() => setLegalModalVisible(false)}>
+      <Modal 
+        visible={legalModalVisible} 
+        transparent 
+        animationType="fade" 
+        onRequestClose={() => {
+          if (!isLoadingLegal) {
+            setLegalModalVisible(false);
+          }
+        }}
+      >
+        <TouchableWithoutFeedback onPress={() => {
+          if (!isLoadingLegal) {
+            setLegalModalVisible(false);
+          }
+        }}>
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
               <Animated.View style={[styles.modalContent, styles.fullModalContent, { transform: [{ translateY: legalSlideAnim }] }]}>
                 <View style={styles.sheetHandle} />
                 <View style={styles.modalHeader}>
                   <Text style={styles.modalTitle}>{legalContent.title}</Text>
-                  <TouchableOpacity onPress={() => setLegalModalVisible(false)}><CloseIcon /></TouchableOpacity>
+                  <TouchableOpacity 
+                    onPress={() => {
+                      if (!isLoadingLegal) {
+                        setLegalModalVisible(false);
+                      }
+                    }}
+                    disabled={isLoadingLegal}
+                  >
+                    <CloseIcon />
+                  </TouchableOpacity>
                 </View>
-                <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.legalScroll}>
-                  <Text style={styles.legalBodyText}>{legalContent.body}</Text>
-                </ScrollView>
+                {isLoadingLegal ? (
+                  <View style={styles.legalLoadingContainer}>
+                    <ActivityIndicator size="large" color="#F5A623" />
+                    <Text style={styles.legalLoadingText}>Loading {legalContent.title || 'content'}...</Text>
+                  </View>
+                ) : (
+                  <ScrollView 
+                    showsVerticalScrollIndicator={false} 
+                    contentContainerStyle={styles.legalScroll}
+                  >
+                    {legalContent.body ? (
+                      <RenderHtml
+                        contentWidth={width - 48}
+                        source={{ html: legalContent.body }}
+                        baseStyle={styles.legalBodyText}
+                        tagsStyles={{
+                          h1: styles.legalHeading1,
+                          h2: styles.legalHeading2,
+                          h3: styles.legalHeading3,
+                          p: styles.legalParagraph,
+                          strong: styles.legalStrong,
+                          a: styles.legalLink,
+                          ul: styles.legalList,
+                          li: styles.legalListItem,
+                        }}
+                      />
+                    ) : (
+                      <View style={styles.legalEmptyContainer}>
+                        <Text style={styles.legalEmptyText}>No content available</Text>
+                      </View>
+                    )}
+                  </ScrollView>
+                )}
               </Animated.View>
             </TouchableWithoutFeedback>
           </View>
@@ -609,7 +702,19 @@ const styles = StyleSheet.create({
   contactValue: { color: '#FFFFFF', fontSize: 16, fontWeight: '600' },
   
   legalScroll: { paddingBottom: 30 },
-  legalBodyText: { color: '#E5E5EA', fontSize: 15, lineHeight: 24, textAlign: 'justify' },
+  legalLoadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingTop: 50 },
+  legalLoadingText: { color: '#8E8E93', fontSize: 14, marginTop: 12 },
+  legalEmptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingTop: 50 },
+  legalEmptyText: { color: '#8E8E93', fontSize: 14 },
+  legalBodyText: { color: '#E5E5EA', fontSize: 15, lineHeight: 24 },
+  legalHeading1: { color: '#FFFFFF', fontSize: 24, fontWeight: 'bold', marginTop: 16, marginBottom: 8 },
+  legalHeading2: { color: '#FFFFFF', fontSize: 20, fontWeight: 'bold', marginTop: 12, marginBottom: 6 },
+  legalHeading3: { color: '#FFFFFF', fontSize: 18, fontWeight: '600', marginTop: 8, marginBottom: 4 },
+  legalParagraph: { color: '#E5E5EA', fontSize: 15, lineHeight: 24, marginBottom: 12 },
+  legalStrong: { color: '#F5A623', fontWeight: 'bold' },
+  legalLink: { color: '#F5A623', textDecorationLine: 'underline' },
+  legalList: { color: '#E5E5EA', fontSize: 15, lineHeight: 24, marginLeft: 20, marginBottom: 12 },
+  legalListItem: { color: '#E5E5EA', fontSize: 15, lineHeight: 24, marginBottom: 4 },
   
   confirmTitle: { fontSize: 20, fontWeight: '700', color: '#FFFFFF', textAlign: 'center', marginBottom: 10 },
   confirmSubtitle: { fontSize: 14, color: '#8E8E93', textAlign: 'center', marginBottom: 28, lineHeight: 20 },

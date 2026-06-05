@@ -14,20 +14,17 @@ import {
   Modal,
   TextInput,
   ScrollView,
-  Share,
-  Alert
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Svg, { Path, Circle, Rect, Line, Polyline } from 'react-native-svg';
-import apiClient from '../services/apiConfig';
-import { useNavigation } from '@react-navigation/native';
-import RNFS from 'react-native-fs';
+import { WebView } from 'react-native-webview';
 import Share from 'react-native-share';
+import apiClient from '../services/apiConfig';
 
 const { width, height } = Dimensions.get('window');
 
-// SVG Icons
+// ==================== SVG ICONS ====================
 const CarIcon = () => (
   <Svg width="20" height="20" viewBox="0 0 24 24" fill="none">
     <Path d="M5 13L6 9H18L19 13M5 13H19M5 13V17H7V15H17V17H19V13M7 15H9M15 15H17" stroke="#F29D38" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -154,14 +151,13 @@ const InvoiceIcon = () => (
   </Svg>
 );
 
-const CompletedStampIcon = () => (
-  <Svg width="60" height="60" viewBox="0 0 24 24" fill="none">
-    <Circle cx="12" cy="12" r="10" stroke="#34C759" strokeWidth="1.5" fill="rgba(52, 199, 89, 0.1)"/>
-    <Path d="M8 12L11 15L16 9" stroke="#34C759" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+const ShareIcon = () => (
+  <Svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+    <Path d="M4 12V20H20V12M12 2V15M12 15L9 12M12 15L15 12" stroke="#5856D6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </Svg>
 );
 
-// Custom Toast Component
+// ==================== TOAST COMPONENT ====================
 const Toast = ({ visible, message, type = 'success', onHide }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(-100)).current;
@@ -239,6 +235,121 @@ const Toast = ({ visible, message, type = 'success', onHide }) => {
   );
 };
 
+// ==================== INVOICE PREVIEW MODAL ====================
+const InvoicePreviewModal = ({ visible, htmlContent, onClose, onShare, isLoading }) => {
+  const getCompleteHtml = (content) => {
+    if (!content) {
+      return '<html><body><p>No invoice data available</p></body></html>';
+    }
+    
+    return `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+          <title>Invoice</title>
+          <style>
+            * {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+            }
+            body {
+              background-color: #f0f0f0;
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+              padding: 20px;
+              margin: 0;
+            }
+            .invoice-container {
+              max-width: 400px;
+              margin: 0 auto;
+              background: white;
+              border-radius: 12px;
+              overflow: hidden;
+              box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+            img {
+              max-width: 100%;
+              height: auto;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+            }
+            td, th {
+              padding: 8px;
+              text-align: left;
+            }
+            .text-center {
+              text-align: center;
+            }
+            .brand-name {
+              font-size: 24px;
+              font-weight: bold;
+              margin: 10px 0;
+            }
+            .divider {
+              border-top: 1px solid #ddd;
+              margin: 10px 0;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="invoice-container">
+            ${content}
+          </div>
+        </body>
+      </html>
+    `;
+  };
+
+  return (
+    <Modal
+      visible={visible}
+      transparent={true}
+      animationType="slide"
+      onRequestClose={onClose}
+    >
+      <View style={styles.invoiceModalContainer}>
+        <View style={styles.invoiceModalHeader}>
+          <Text style={styles.invoiceModalTitle}>Invoice Preview</Text>
+          <TouchableOpacity onPress={onClose} style={styles.invoiceModalClose}>
+            <CloseIcon color="#8E8E93" />
+          </TouchableOpacity>
+        </View>
+        
+        <View style={styles.webviewContainer}>
+          {isLoading ? (
+            <View style={styles.loadingOverlay}>
+              <ActivityIndicator size="large" color="#F29D38" />
+              <Text style={styles.loadingText}>Loading invoice...</Text>
+            </View>
+          ) : htmlContent ? (
+            <WebView
+              originWhitelist={['*']}
+              source={{ html: getCompleteHtml(htmlContent) }}
+              style={styles.webview}
+              scalesPageToFit={true}
+              javaScriptEnabled={true}
+              domStorageEnabled={true}
+              startInLoadingState={true}
+              onError={(error) => console.error('WebView error:', error)}
+            />
+          ) : (
+            <View style={styles.emptyInvoiceContainer}>
+              <Text style={styles.emptyText}>No invoice data available</Text>
+            </View>
+          )}
+        </View>
+        
+        
+      </View>
+    </Modal>
+  );
+};
+
+// ==================== MAIN COMPONENT ====================
 const TripHistoryScreen = () => {
   const [activeTab, setActiveTab] = useState('All');
   const [trips, setTrips] = useState([]);
@@ -250,9 +361,12 @@ const TripHistoryScreen = () => {
   const [cancelReason, setCancelReason] = useState('');
   const [cancelSubmitting, setCancelSubmitting] = useState(false);
   const [toast, setToast] = useState({ visible: false, message: '', type: 'success' });
-  const [downloadingInvoice, setDownloadingInvoice] = useState(false);
+  const [loadingInvoice, setLoadingInvoice] = useState(false);
+  const [invoiceModalVisible, setInvoiceModalVisible] = useState(false);
+  const [invoiceHtml, setInvoiceHtml] = useState('');
+  const [currentInvoiceTrip, setCurrentInvoiceTrip] = useState(null);
   const navigation = useNavigation();
-  // Bottom sheet animation
+  
   const slideAnim = useRef(new Animated.Value(height)).current;
 
   const showToast = (message, type = 'success') => {
@@ -263,11 +377,80 @@ const TripHistoryScreen = () => {
     setToast({ visible: false, message: '', type: 'success' });
   };
 
-  // Fetch bookings from API based on status
-  const fetchBookings = async (status = null) => {
+  const fetchInvoice = async (bookingId) => {
+    try {
+      const formData = new FormData();
+      formData.append('booking_id', bookingId.toString());
+      
+      const response = await apiClient.post('/get-invoice', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      
+      if (response.data && response.data.status === 'success') {
+        return response.data.html;
+      } else {
+        throw new Error(response.data?.message || 'Failed to fetch invoice');
+      }
+    } catch (error) {
+      console.error('Error fetching invoice:', error);
+      throw error;
+    }
+  };
+
+  const shareInvoiceAsText = async (htmlContent) => {
+    try {
+      const textContent = htmlContent
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      
+      await Share.open({
+        message: `Here is your invoice details:\n\n${textContent.substring(0, 1000)}...\n\nFor full invoice, please check the app.`,
+        title: 'Invoice Details',
+      });
+      
+      showToast('Invoice shared successfully!', 'success');
+    } catch (error) {
+      console.error('Share error:', error);
+      if (error.message !== 'User did not share') {
+        showToast('Failed to share invoice', 'error');
+      }
+    }
+  };
+
+  const handleViewInvoice = async (trip) => {
+    setLoadingInvoice(true);
+    setCurrentInvoiceTrip(trip);
+    
+    try {
+      //showToast('Fetching invoice...', 'info');
+      const htmlContent = await fetchInvoice(trip.id);
+      
+      if (htmlContent) {
+        setInvoiceHtml(htmlContent);
+        setInvoiceModalVisible(true);
+        //showToast('Invoice loaded successfully', 'success');
+      } else {
+        throw new Error('No invoice data received');
+      }
+    } catch (error) {
+      showToast(error.message || 'Failed to fetch invoice', 'error');
+    } finally {
+      setLoadingInvoice(false);
+    }
+  };
+
+  const handleShareInvoice = async () => {
+    if (!invoiceHtml) {
+      showToast('No invoice data to share', 'warning');
+      return;
+    }
+    await shareInvoiceAsText(invoiceHtml);
+  };
+
+  const fetchBookings = async () => {
     try {
       setLoading(true);
-      
       let requestBody = {};
       
       if (activeTab === 'Pending') {
@@ -275,18 +458,13 @@ const TripHistoryScreen = () => {
       } else if (activeTab === 'Completed') {
         requestBody = { status: 'completed' };
       } else if (activeTab === 'Running') {
-        requestBody = { status: 'in_progress' };
+        requestBody = { status: 'ongoing' };
       }
       
-      console.log('Fetching bookings with body:', requestBody);
-      
       const response = await apiClient.post('/bookings', requestBody);
-      console.log('Bookings API Response:', response.data);
       
       if (response.data && response.data.success) {
         setTrips(response.data.data);
-      } else {
-        console.error('Failed to fetch bookings:', response.data);
       }
     } catch (error) {
       console.error('Error fetching bookings:', error);
@@ -319,7 +497,6 @@ const TripHistoryScreen = () => {
     setSelectedTrip(trip);
     setCancelModalVisible(true);
     setCancelReason('');
-    // Animate bottom sheet up
     Animated.timing(slideAnim, {
       toValue: 0,
       duration: 300,
@@ -328,7 +505,6 @@ const TripHistoryScreen = () => {
   };
 
   const closeCancelModal = () => {
-    // Animate bottom sheet down
     Animated.timing(slideAnim, {
       toValue: height,
       duration: 300,
@@ -353,269 +529,33 @@ const TripHistoryScreen = () => {
       formData.append('reason', cancelReason);
       
       const response = await apiClient.post('/cancel-booking', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
       
       if (response.data && response.data.success) {
         showToast(response.data.message || 'Ride cancelled successfully', 'success');
         closeCancelModal();
-        fetchBookings(); // Refresh the list
+        fetchBookings();
       } else {
         showToast(response.data.message || 'Failed to cancel ride', 'error');
       }
     } catch (error) {
-      console.error('Error cancelling ride:', error);
-      showToast(error.response?.data?.message || 'Failed to cancel ride. Please try again.', 'error');
+      showToast('Failed to cancel ride. Please try again.', 'error');
     } finally {
       setCancelSubmitting(false);
     }
   };
 
   const handleTrackDriver = (trip) => {
-    // Only allow tracking if trip is not cancelled and not completed
     if (trip.status?.toLowerCase() === 'cancelled') {
       showToast('Cannot track driver for cancelled ride', 'warning');
       return;
     }
     if (trip.status?.toLowerCase() === 'completed') {
-      showToast('Trip is completed. You can download the invoice instead.', 'info');
+      showToast('Trip is completed. You can view the invoice instead.', 'info');
       return;
     }
     navigation.navigate('TrackDriver', { tripId: trip.id });
-  };
-
-  const handleDownloadInvoice = async (trip) => {
-    setDownloadingInvoice(true);
-    try {
-      // Call API to generate invoice
-      const response = await apiClient.post('/generate-invoice', { booking_id: trip.id });
-      
-      if (response.data && response.data.success) {
-        const invoiceData = response.data.invoice;
-        
-        // Generate HTML invoice content
-        const invoiceHtml = generateInvoiceHTML(trip, invoiceData);
-        
-        // Save to file
-        const fileName = `Invoice_${trip.id}_${Date.now()}.html`;
-        const filePath = `${RNFS.DocumentDirectoryPath}/${fileName}`;
-        
-        await RNFS.writeFile(filePath, invoiceHtml, 'utf8');
-        
-        // Share the file
-        const shareOptions = {
-          title: 'Trip Invoice',
-          url: `file://${filePath}`,
-          type: 'text/html',
-          failOnCancel: false,
-        };
-        
-        await Share.open(shareOptions);
-        showToast('Invoice generated successfully', 'success');
-      } else {
-        showToast(response.data.message || 'Failed to generate invoice', 'error');
-      }
-    } catch (error) {
-      console.error('Error downloading invoice:', error);
-      showToast('Failed to download invoice. Please try again.', 'error');
-    } finally {
-      setDownloadingInvoice(false);
-    }
-  };
-
-  const generateInvoiceHTML = (trip, invoiceData) => {
-    return `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Trip Invoice</title>
-        <style>
-          body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-          }
-          .invoice-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            overflow: hidden;
-          }
-          .invoice-header {
-            background: linear-gradient(135deg, #F29D38 0%, #e8891e 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-          }
-          .invoice-header h1 {
-            margin: 0;
-            font-size: 28px;
-          }
-          .invoice-header p {
-            margin: 10px 0 0;
-            opacity: 0.9;
-          }
-          .invoice-content {
-            padding: 30px;
-          }
-          .trip-details {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-          }
-          .detail-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e0e0e0;
-          }
-          .detail-label {
-            font-weight: 600;
-            color: #666;
-          }
-          .detail-value {
-            color: #333;
-          }
-          .fare-breakdown {
-            margin-top: 20px;
-          }
-          .fare-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-          }
-          .fare-total {
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 2px solid #F29D38;
-            font-weight: bold;
-            font-size: 18px;
-          }
-          .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            background: #34C759;
-            color: white;
-          }
-          .footer {
-            background: #f8f9fa;
-            padding: 20px;
-            text-align: center;
-            font-size: 12px;
-            color: #999;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="invoice-container">
-          <div class="invoice-header">
-            <h1>TRIP INVOICE</h1>
-            <p>Invoice #: INV-${trip.id}-${Date.now()}</p>
-          </div>
-          <div class="invoice-content">
-            <div class="trip-details">
-              <div class="detail-row">
-                <span class="detail-label">Trip Status:</span>
-                <span class="detail-value"><span class="status-badge">COMPLETED</span></span>
-              </div>
-              <div class="detail-row">
-                <span class="detail-label">Booking Date:</span>
-                <span class="detail-value">${new Date(trip.booking_date).toLocaleDateString()}</span>
-              </div>
-              <div class="detail-row">
-                <span class="detail-label">Pickup Time:</span>
-                <span class="detail-value">${trip.pickup_time}</span>
-              </div>
-              <div class="detail-row">
-                <span class="detail-label">From:</span>
-                <span class="detail-value">${trip.from_location}</span>
-              </div>
-              <div class="detail-row">
-                <span class="detail-label">To:</span>
-                <span class="detail-value">${trip.to_location}</span>
-              </div>
-              <div class="detail-row">
-                <span class="detail-label">Booking Type:</span>
-                <span class="detail-value">${trip.booking_type}</span>
-              </div>
-              <div class="detail-row">
-                <span class="detail-label">Booked For:</span>
-                <span class="detail-value">${trip.booked_for}</span>
-              </div>
-            </div>
-
-            ${trip.driver ? `
-              <div class="trip-details">
-                <h3>Driver Details</h3>
-                <div class="detail-row">
-                  <span class="detail-label">Name:</span>
-                  <span class="detail-value">${trip.driver.name}</span>
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">Phone:</span>
-                  <span class="detail-value">${trip.driver.phone}</span>
-                </div>
-              </div>
-            ` : ''}
-
-            ${trip.vehicle ? `
-              <div class="trip-details">
-                <h3>Vehicle Details</h3>
-                <div class="detail-row">
-                  <span class="detail-label">Model:</span>
-                  <span class="detail-value">${trip.vehicle.vehicle_model}</span>
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">Number:</span>
-                  <span class="detail-value">${trip.vehicle.vehicle_number}</span>
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">Color:</span>
-                  <span class="detail-value">${trip.vehicle.vehicle_color}</span>
-                </div>
-              </div>
-            ` : ''}
-
-            <div class="fare-breakdown">
-              <h3>Fare Breakdown</h3>
-              <div class="fare-row">
-                <span>Base Fee:</span>
-                <span>$${parseFloat(trip.base_fee || 0).toFixed(2)}</span>
-              </div>
-              <div class="fare-row">
-                <span>Fuel Surcharge:</span>
-                <span>$${parseFloat(trip.fulesurcharge || 0).toFixed(2)}</span>
-              </div>
-              <div class="fare-row">
-                <span>Gratuity:</span>
-                <span>$${parseFloat(trip.graduity || 0).toFixed(2)}</span>
-              </div>
-              <div class="fare-row fare-total">
-                <span>Total Amount:</span>
-                <span>$${parseFloat(trip.total_fee || 0).toFixed(2)}</span>
-              </div>
-            </div>
-          </div>
-          <div class="footer">
-            <p>Thank you for choosing our service!</p>
-            <p>This is a system generated invoice. For any queries, please contact our support.</p>
-          </div>
-        </div>
-      </body>
-      </html>
-    `;
   };
 
   const getDisplayStatus = (status) => {
@@ -673,7 +613,6 @@ const TripHistoryScreen = () => {
     return `${hour12}:${minutes} ${ampm}`;
   };
 
-  // Running animation component
   const RunningAnimation = () => {
     const pulseAnim = useRef(new Animated.Value(1)).current;
     const translateXAnim = useRef(new Animated.Value(0)).current;
@@ -730,49 +669,6 @@ const TripHistoryScreen = () => {
     );
   };
 
-  // Completed Stamp Component
-  const CompletedStamp = () => {
-    const rotateAnim = useRef(new Animated.Value(0)).current;
-    const scaleAnim = useRef(new Animated.Value(0.5)).current;
-
-    useEffect(() => {
-      Animated.parallel([
-        Animated.spring(scaleAnim, {
-          toValue: 1,
-          friction: 5,
-          useNativeDriver: true,
-        }),
-        Animated.timing(rotateAnim, {
-          toValue: 1,
-          duration: 500,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    }, []);
-
-    const rotate = rotateAnim.interpolate({
-      inputRange: [0, 1],
-      outputRange: ['-15deg', '0deg'],
-    });
-
-    return (
-      <Animated.View 
-        style={[
-          styles.completedStamp,
-          {
-            transform: [
-              { rotate: rotate },
-              { scale: scaleAnim }
-            ]
-          }
-        ]}
-      >
-        <CompletedStampIcon />
-        <Text style={styles.completedStampText}>COMPLETED</Text>
-      </Animated.View>
-    );
-  };
-
   const renderTripItem = ({ item }) => {
     const displayStatus = getDisplayStatus(item.status);
     const statusColor = getStatusColor(item.status);
@@ -788,19 +684,8 @@ const TripHistoryScreen = () => {
 
     return (
       <View style={[styles.tripCard, isCompleted && styles.completedCard]}>
-        <TouchableOpacity 
-          activeOpacity={0.9}
-          onPress={() => toggleExpand(item.id)}
-        >
-          {/* Compact View */}
+        <TouchableOpacity activeOpacity={0.9} onPress={() => toggleExpand(item.id)}>
           <View style={styles.compactContainer}>
-            {/* Completed Stamp Overlay for Completed Trips */}
-            {isCompleted && (
-              <View style={styles.stampOverlay}>
-                <CompletedStamp />
-              </View>
-            )}
-            
             <View style={styles.cardHeader}>
               <View style={styles.dateTimeContainer}>
                 <View style={styles.dateRow}>
@@ -851,8 +736,7 @@ const TripHistoryScreen = () => {
               {isRunning && !isCancelled && <RunningAnimation />}
               {isCompleted && (
                 <View style={styles.completedBadge}>
-                  <SuccessIcon />
-                  <Text style={styles.completedBadgeText}>Trip Completed</Text>
+                  <Text style={styles.completedBadgeText}>Completed</Text>
                 </View>
               )}
               {isCancelled && (
@@ -865,12 +749,10 @@ const TripHistoryScreen = () => {
           </View>
         </TouchableOpacity>
 
-        {/* Expanded View */}
         {isExpanded && (
           <View style={styles.expandedContainer}>
             <View style={styles.divider} />
             
-            {/* Action Buttons */}
             <View style={styles.actionButtons}>
               {!isCancelled && !isCompleted && hasDriver && (
                 <TouchableOpacity 
@@ -885,15 +767,15 @@ const TripHistoryScreen = () => {
               {isCompleted && (
                 <TouchableOpacity 
                   style={[styles.actionButton, styles.invoiceButton]}
-                  onPress={() => handleDownloadInvoice(item)}
-                  disabled={downloadingInvoice}
+                  onPress={() => handleViewInvoice(item)}
+                  disabled={loadingInvoice}
                 >
-                  {downloadingInvoice ? (
+                  {loadingInvoice && currentInvoiceTrip?.id === item.id ? (
                     <ActivityIndicator size="small" color="#34C759" />
                   ) : (
                     <>
                       <InvoiceIcon />
-                      <Text style={styles.invoiceButtonText}>Download Invoice</Text>
+                      <Text style={styles.invoiceButtonText}>View Invoice</Text>
                     </>
                   )}
                 </TouchableOpacity>
@@ -910,22 +792,16 @@ const TripHistoryScreen = () => {
               )}
             </View>
 
-            {/* Show cancelled message if trip is cancelled */}
             {isCancelled && (
               <View style={styles.cancelledMessageContainer}>
                 <CancelIcon />
-                <Text style={styles.cancelledMessageText}>
-                  This trip has been cancelled
-                </Text>
+                <Text style={styles.cancelledMessageText}>This trip has been cancelled</Text>
                 {item.cancel_reason && (
-                  <Text style={styles.cancelReasonText}>
-                    Reason: {item.cancel_reason}
-                  </Text>
+                  <Text style={styles.cancelReasonText}>Reason: {item.cancel_reason}</Text>
                 )}
               </View>
             )}
 
-            {/* Driver Details - only if not cancelled and not completed */}
             {hasDriver && !isCancelled && !isCompleted && (
               <View style={styles.section}>
                 <View style={styles.sectionHeader}>
@@ -942,17 +818,13 @@ const TripHistoryScreen = () => {
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.infoLabel}>Status:</Text>
-                  <Text style={[
-                    styles.infoValue,
-                    item.driver.is_online ? styles.onlineText : styles.offlineText
-                  ]}>
+                  <Text style={[styles.infoValue, item.driver.is_online ? styles.onlineText : styles.offlineText]}>
                     {item.driver.is_online ? '🟢 Online' : '⚫ Offline'}
                   </Text>
                 </View>
               </View>
             )}
 
-            {/* Vehicle Details - only if not cancelled and not completed */}
             {hasVehicle && !isCancelled && !isCompleted && (
               <View style={styles.section}>
                 <View style={styles.sectionHeader}>
@@ -971,16 +843,9 @@ const TripHistoryScreen = () => {
                   <Text style={styles.infoLabel}>Number:</Text>
                   <Text style={styles.infoValue}>{item.vehicle.vehicle_number}</Text>
                 </View>
-                {item.vehicle.vehicle_feture && (
-                  <View style={styles.infoRow}>
-                    <Text style={styles.infoLabel}>Features:</Text>
-                    <Text style={styles.infoValue}>{item.vehicle.vehicle_feture}</Text>
-                  </View>
-                )}
               </View>
             )}
 
-            {/* Vehicle Class Details */}
             {item.vehicle_class && (
               <View style={styles.section}>
                 <View style={styles.sectionHeader}>
@@ -998,7 +863,6 @@ const TripHistoryScreen = () => {
               </View>
             )}
 
-            {/* Booking Details */}
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
                 <CalendarIcon />
@@ -1012,18 +876,6 @@ const TripHistoryScreen = () => {
                 <Text style={styles.infoLabel}>Booked For:</Text>
                 <Text style={styles.infoValue}>{item.booked_for}</Text>
               </View>
-              {item.duration && (
-                <View style={styles.infoRow}>
-                  <Text style={styles.infoLabel}>Duration:</Text>
-                  <Text style={styles.infoValue}>{item.duration} hours</Text>
-                </View>
-              )}
-              {item.distance && (
-                <View style={styles.infoRow}>
-                  <Text style={styles.infoLabel}>Distance:</Text>
-                  <Text style={styles.infoValue}>{item.distance} km</Text>
-                </View>
-              )}
               {item.booking_note && (
                 <View style={styles.infoRow}>
                   <Text style={styles.infoLabel}>Note:</Text>
@@ -1032,7 +884,6 @@ const TripHistoryScreen = () => {
               )}
             </View>
 
-            {/* Fare Breakdown */}
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
                 <MoneyIcon />
@@ -1056,7 +907,6 @@ const TripHistoryScreen = () => {
               </View>
             </View>
 
-            {/* Tracking History - Only for non-completed trips that have tracking */}
             {trackingHistory.length > 0 && !isCancelled && !isCompleted && (
               <View style={styles.section}>
                 <View style={styles.sectionHeader}>
@@ -1067,9 +917,7 @@ const TripHistoryScreen = () => {
                   <View key={track.id} style={styles.trackingItem}>
                     <View style={styles.trackingDot} />
                     <View style={styles.trackingContent}>
-                      <Text style={styles.trackingStatus}>
-                        {getDisplayStatus(track.status)}
-                      </Text>
+                      <Text style={styles.trackingStatus}>{getDisplayStatus(track.status)}</Text>
                       <Text style={styles.trackingNote}>{track.notes}</Text>
                       <Text style={styles.trackingTime}>
                         {new Date(track.created_at).toLocaleString()}
@@ -1108,12 +956,7 @@ const TripHistoryScreen = () => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
 
-      <Toast 
-        visible={toast.visible} 
-        message={toast.message} 
-        type={toast.type} 
-        onHide={hideToast} 
-      />
+      <Toast visible={toast.visible} message={toast.message} type={toast.type} onHide={hideToast} />
 
       <View style={styles.screenHeader}>
         <Text style={styles.screenTitle}>Trip History</Text>
@@ -1121,21 +964,17 @@ const TripHistoryScreen = () => {
       </View>
 
       <View style={styles.tabContainer}>
-        {tabs.map((tab) => {
-          const isSelected = activeTab === tab.key;
-          return (
-            <TouchableOpacity
-              key={tab.key}
-              style={[styles.tabButton, isSelected && styles.tabButtonActive]}
-              activeOpacity={0.7}
-              onPress={() => setActiveTab(tab.key)}
-            >
-              <Text style={[styles.tabButtonText, isSelected && styles.tabButtonTextActive]}>
-                {tab.label}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
+        {tabs.map((tab) => (
+          <TouchableOpacity
+            key={tab.key}
+            style={[styles.tabButton, activeTab === tab.key && styles.tabButtonActive]}
+            onPress={() => setActiveTab(tab.key)}
+          >
+            <Text style={[styles.tabButtonText, activeTab === tab.key && styles.tabButtonTextActive]}>
+              {tab.label}
+            </Text>
+          </TouchableOpacity>
+        ))}
       </View>
 
       <FlatList
@@ -1145,12 +984,7 @@ const TripHistoryScreen = () => {
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
         refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor="#F29D38"
-            colors={["#F29D38"]}
-          />
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#F29D38" colors={["#F29D38"]} />
         }
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
@@ -1160,25 +994,22 @@ const TripHistoryScreen = () => {
         }
       />
 
-      {/* Cancel Ride Modal - Bottom Sheet */}
-      <Modal
-        visible={cancelModalVisible}
-        transparent={true}
-        animationType="none"
-        onRequestClose={closeCancelModal}
-      >
+      <InvoicePreviewModal
+        visible={invoiceModalVisible}
+        htmlContent={invoiceHtml}
+        isLoading={loadingInvoice}
+        onClose={() => {
+          setInvoiceModalVisible(false);
+          setInvoiceHtml('');
+          setCurrentInvoiceTrip(null);
+        }}
+        onShare={handleShareInvoice}
+      />
+
+      <Modal visible={cancelModalVisible} transparent={true} animationType="none" onRequestClose={closeCancelModal}>
         <View style={styles.modalOverlay}>
-          <TouchableOpacity 
-            style={styles.modalBackdrop} 
-            activeOpacity={1} 
-            onPress={closeCancelModal}
-          />
-          <Animated.View 
-            style={[
-              styles.bottomSheet,
-              { transform: [{ translateY: slideAnim }] }
-            ]}
-          >
+          <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={closeCancelModal} />
+          <Animated.View style={[styles.bottomSheet, { transform: [{ translateY: slideAnim }] }]}>
             <View style={styles.bottomSheetHandle}>
               <View style={styles.handleBar} />
             </View>
@@ -1188,25 +1019,19 @@ const TripHistoryScreen = () => {
                 <CancelIcon />
               </View>
               <Text style={styles.modalTitle}>Cancel Ride</Text>
-              <Text style={styles.modalSubtitle}>
-                Are you sure you want to cancel this ride?
-              </Text>
+              <Text style={styles.modalSubtitle}>Are you sure you want to cancel this ride?</Text>
 
               <View style={styles.tripInfoBox}>
                 <View style={styles.tripInfoRow}>
                   <LocationIcon color="#34C759" />
-                  <Text style={styles.tripInfoText}>
-                    {selectedTrip?.from_location}
-                  </Text>
+                  <Text style={styles.tripInfoText}>{selectedTrip?.from_location}</Text>
                 </View>
                 <View style={styles.tripInfoArrow}>
                   <ArrowIcon />
                 </View>
                 <View style={styles.tripInfoRow}>
                   <LocationIcon color="#F29D38" />
-                  <Text style={styles.tripInfoText}>
-                    {selectedTrip?.to_location}
-                  </Text>
+                  <Text style={styles.tripInfoText}>{selectedTrip?.to_location}</Text>
                 </View>
                 <View style={styles.tripInfoDivider} />
                 <View style={styles.tripInfoRow}>
@@ -1235,18 +1060,11 @@ const TripHistoryScreen = () => {
               />
 
               <View style={styles.modalButtons}>
-                <TouchableOpacity 
-                  style={[styles.modalButton, styles.cancelModalButton]}
-                  onPress={closeCancelModal}
-                >
+                <TouchableOpacity style={[styles.modalButton, styles.cancelModalButton]} onPress={closeCancelModal}>
                   <CloseIcon color="#8E8E93" />
                   <Text style={styles.cancelModalButtonText}>Go Back</Text>
                 </TouchableOpacity>
-                <TouchableOpacity 
-                  style={[styles.modalButton, styles.confirmModalButton]}
-                  onPress={handleCancelRide}
-                  disabled={cancelSubmitting}
-                >
+                <TouchableOpacity style={[styles.modalButton, styles.confirmModalButton]} onPress={handleCancelRide} disabled={cancelSubmitting}>
                   {cancelSubmitting ? (
                     <ActivityIndicator size="small" color="#FFFFFF" />
                   ) : (
@@ -1265,6 +1083,7 @@ const TripHistoryScreen = () => {
   );
 };
 
+// ==================== STYLES ====================
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -1338,24 +1157,6 @@ const styles = StyleSheet.create({
   },
   compactContainer: {
     padding: 16,
-    position: 'relative',
-  },
-  stampOverlay: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    zIndex: 10,
-  },
-  completedStamp: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    opacity: 0.9,
-  },
-  completedStampText: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    color: '#34C759',
-    marginTop: -5,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -1649,7 +1450,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 8,
   },
-  // Toast Styles
   toastContainer: {
     position: 'absolute',
     top: Platform.OS === 'ios' ? 50 : 30,
@@ -1674,7 +1474,64 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#FFFFFF',
   },
-  // Modal Styles
+  invoiceModalContainer: {
+    flex: 1,
+    backgroundColor: '#000000',
+  },
+  invoiceModalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: Platform.OS === 'ios' ? 50 : 20,
+    paddingBottom: 15,
+    backgroundColor: '#1C1C1E',
+    borderBottomWidth: 1,
+    borderBottomColor: '#2C2C2E',
+  },
+  invoiceModalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  invoiceModalClose: {
+    padding: 8,
+  },
+  webviewContainer: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  webview: {
+    flex: 1,
+  },
+  shareButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#5856D6',
+    paddingVertical: 16,
+    marginHorizontal: 20,
+    marginVertical: 20,
+    borderRadius: 12,
+    gap: 10,
+  },
+  shareButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  loadingOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+  },
+  emptyInvoiceContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+  },
   modalOverlay: {
     flex: 1,
     justifyContent: 'flex-end',
