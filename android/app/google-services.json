@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "927015020907",
+    "project_id": "chaufferuserapp",
+    "storage_bucket": "chaufferuserapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:927015020907:android:3280732f630b507b70042e",
+        "android_client_info": {
+          "package_name": "com.chauffer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNIocq0OUkD7gDpZyge17VQq0YSAWv_Rc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
