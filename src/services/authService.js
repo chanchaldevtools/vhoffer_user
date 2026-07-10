@@ -2,11 +2,12 @@
 import apiClient from './apiConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const loginUser = async (email, password) => {
+export const loginUser = async (email, password,fcmToken = null) => {
   try {
     const formData = new FormData();
     formData.append('email', email);
     formData.append('password', password);
+    formData.append('fcmToken', fcmToken);
 
     const response = await apiClient.post('/login', formData, {
       headers: {

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { 
-  StyleSheet, 
-  Text, 
-  View, 
-  FlatList, 
-  TouchableOpacity, 
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  TouchableOpacity,
   StatusBar,
   Platform,
   RefreshControl,
@@ -17,12 +17,17 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import Svg, { Path, Circle, Rect, Line, Polyline } from 'react-native-svg';
 import { WebView } from 'react-native-webview';
 import Share from 'react-native-share';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import apiClient from '../services/apiConfig';
 
 const { width, height } = Dimensions.get('window');
+
+// Your Google Places API Key
+const GOOGLE_PLACES_API_KEY = 'AIzaSyDZMPwuTtTXazrUOsqV2Q3W-zs8Ed2SUM8';
 
 // ==================== SVG ICONS ====================
 const CarIcon = () => (
@@ -98,6 +103,13 @@ const TrackingIcon = () => (
   </Svg>
 );
 
+const LocationPinIcon = () => (
+  <Svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+    <Path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke="#007AFF" strokeWidth="1.5" fill="none"/>
+    <Circle cx="12" cy="9" r="3" stroke="#007AFF" strokeWidth="1.5" fill="none"/>
+  </Svg>
+);
+
 const CloseIcon = ({ color = "#8E8E93" }) => (
   <Svg width="20" height="20" viewBox="0 0 24 24" fill="none">
     <Path d="M18 6L6 18M6 6L18 18" stroke={color} strokeWidth="2" strokeLinecap="round"/>
@@ -154,6 +166,13 @@ const InvoiceIcon = () => (
 const ShareIcon = () => (
   <Svg width="20" height="20" viewBox="0 0 24 24" fill="none">
     <Path d="M4 12V20H20V12M12 2V15M12 15L9 12M12 15L15 12" stroke="#5856D6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </Svg>
+);
+
+const EditIcon = () => (
+  <Svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+    <Path d="M17 3L21 7L7 21H3V17L17 3Z" stroke="#F29D38" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <Path d="M15 5L19 9" stroke="#F29D38" strokeWidth="1.5" strokeLinecap="round"/>
   </Svg>
 );
 
@@ -234,6 +253,8 @@ const Toast = ({ visible, message, type = 'success', onHide }) => {
     </Animated.View>
   );
 };
+
+
 
 // ==================== INVOICE PREVIEW MODAL ====================
 const InvoicePreviewModal = ({ visible, htmlContent, onClose, onShare, isLoading }) => {
@@ -343,7 +364,12 @@ const InvoicePreviewModal = ({ visible, htmlContent, onClose, onShare, isLoading
           )}
         </View>
         
-        
+        {htmlContent && (
+          <TouchableOpacity style={styles.shareButton} onPress={onShare}>
+            <ShareIcon />
+            <Text style={styles.shareButtonText}>Share Invoice</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </Modal>
   );
@@ -365,6 +391,8 @@ const TripHistoryScreen = () => {
   const [invoiceModalVisible, setInvoiceModalVisible] = useState(false);
   const [invoiceHtml, setInvoiceHtml] = useState('');
   const [currentInvoiceTrip, setCurrentInvoiceTrip] = useState(null);
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [tripToEdit, setTripToEdit] = useState(null);
   const navigation = useNavigation();
   
   const slideAnim = useRef(new Animated.Value(height)).current;
@@ -423,13 +451,11 @@ const TripHistoryScreen = () => {
     setCurrentInvoiceTrip(trip);
     
     try {
-      //showToast('Fetching invoice...', 'info');
       const htmlContent = await fetchInvoice(trip.id);
       
       if (htmlContent) {
         setInvoiceHtml(htmlContent);
         setInvoiceModalVisible(true);
-        //showToast('Invoice loaded successfully', 'success');
       } else {
         throw new Error('No invoice data received');
       }
@@ -462,7 +488,7 @@ const TripHistoryScreen = () => {
       }
       
       const response = await apiClient.post('/bookings', requestBody);
-      
+      console.log(response.data);
       if (response.data && response.data.success) {
         setTrips(response.data.data);
       }
@@ -547,6 +573,8 @@ const TripHistoryScreen = () => {
   };
 
   const handleTrackDriver = (trip) => {
+
+    console.log('sending_data',trip.id);
     if (trip.status?.toLowerCase() === 'cancelled') {
       showToast('Cannot track driver for cancelled ride', 'warning');
       return;
@@ -556,6 +584,23 @@ const TripHistoryScreen = () => {
       return;
     }
     navigation.navigate('TrackDriver', { tripId: trip.id });
+  };
+
+  const handleChangePickupDrop = (trip) => {
+    if (trip.status?.toLowerCase() === 'cancelled') {
+      showToast('Cannot edit cancelled trip', 'warning');
+      return;
+    }
+    if (trip.status?.toLowerCase() === 'completed') {
+      showToast('Cannot edit completed trip', 'warning');
+      return;
+    }
+    setTripToEdit(trip);
+    setEditModalVisible(true);
+  };
+
+  const handleTripUpdated = () => {
+    fetchBookings();
   };
 
   const getDisplayStatus = (status) => {
@@ -681,6 +726,7 @@ const TripHistoryScreen = () => {
     const hasVehicle = item.vehicle !== null && !isCancelled;
     const trackingHistory = item.tracking || [];
     const isCancellable = !isCancelled && !isCompleted && ['pending', 'driver_assigned', 'vehicle_assigned'].includes(item.status?.toLowerCase());
+    const isEditable = true;
 
     return (
       <View style={[styles.tripCard, isCompleted && styles.completedCard]}>
@@ -748,22 +794,26 @@ const TripHistoryScreen = () => {
             </View>
           </View>
         </TouchableOpacity>
-
         {isExpanded && (
           <View style={styles.expandedContainer}>
             <View style={styles.divider} />
             
             <View style={styles.actionButtons}>
+              {/* Edit Location Button */}
+              
+              
+              {/* Track Button */}
               {!isCancelled && !isCompleted && hasDriver && (
                 <TouchableOpacity 
-                  style={[styles.actionButton, styles.trackButton]}
+                  style={[styles.actionButton, styles.editButton]}
                   onPress={() => handleTrackDriver(item)}
                 >
                   <TrackingIcon />
-                  <Text style={styles.trackButtonText}>Track Driver</Text>
+                  <Text style={styles.editButtonText}>Track</Text>
                 </TouchableOpacity>
               )}
               
+              {/* Invoice Button */}
               {isCompleted && (
                 <TouchableOpacity 
                   style={[styles.actionButton, styles.invoiceButton]}
@@ -775,19 +825,20 @@ const TripHistoryScreen = () => {
                   ) : (
                     <>
                       <InvoiceIcon />
-                      <Text style={styles.invoiceButtonText}>View Invoice</Text>
+                      <Text style={styles.invoiceButtonText}>Invoice</Text>
                     </>
                   )}
                 </TouchableOpacity>
               )}
               
+              {/* Cancel Button */}
               {isCancellable && (
                 <TouchableOpacity 
                   style={[styles.actionButton, styles.cancelButton]}
                   onPress={() => openCancelModal(item)}
                 >
                   <CloseIcon color="#FF3B30" />
-                  <Text style={styles.cancelButtonText}>Cancel Ride</Text>
+                  <Text style={styles.cancelButtonText}>Cancel</Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -994,6 +1045,8 @@ const TripHistoryScreen = () => {
         }
       />
 
+      
+
       <InvoicePreviewModal
         visible={invoiceModalVisible}
         htmlContent={invoiceHtml}
@@ -1118,7 +1171,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#1C1C1E',
     marginHorizontal: 20,
-    borderRadius: 12,
+    borderRadius: 100,
     padding: 4,
     marginBottom: 20,
   },
@@ -1126,18 +1179,18 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 10,
     alignItems: 'center',
-    borderRadius: 8,
+    borderRadius: 100,
   },
   tabButtonActive: {
     backgroundColor: '#F29D38',
   },
   tabButtonText: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '600',
     color: '#8E8E93',
   },
   tabButtonTextActive: {
-    color: '#000000',
+    color: '#fafafa',
   },
   listContainer: {
     paddingHorizontal: 20,
@@ -1305,15 +1358,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 8,
   },
-  trackButton: {
+  editButton: {
     backgroundColor: 'rgba(242, 157, 56, 0.15)',
     borderWidth: 1,
     borderColor: '#F29D38',
   },
-  trackButtonText: {
+  editButtonText: {
     fontSize: 14,
     fontWeight: '600',
     color: '#F29D38',
+  },
+  trackButton: {
+    backgroundColor: 'rgba(0, 122, 255, 0.15)',
+    borderWidth: 1,
+    borderColor: '#007AFF',
+  },
+  trackButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#007AFF',
   },
   invoiceButton: {
     backgroundColor: 'rgba(52, 199, 89, 0.15)',
@@ -1552,6 +1615,14 @@ const styles = StyleSheet.create({
     paddingBottom: Platform.OS === 'ios' ? 40 : 20,
     maxHeight: height * 0.8,
   },
+  editBottomSheet: {
+    backgroundColor: '#1C1C1E',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingHorizontal: 20,
+    paddingBottom: Platform.OS === 'ios' ? 40 : 20,
+    maxHeight: height * 0.9,
+  },
   bottomSheetHandle: {
     alignItems: 'center',
     paddingVertical: 12,
@@ -1650,6 +1721,105 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#FFFFFF',
+  },
+  // Edit Modal Styles
+  editTabContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#000000',
+    borderWidth: 1,
+    borderColor: '#262626',
+    borderRadius: 30,
+    height: 48,
+    padding: 3,
+    width: '100%',
+    marginBottom: 20,
+  },
+  editTabButton: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 25,
+  },
+  editTabButtonActive: {
+    backgroundColor: '#F29D38',
+  },
+  editTabButtonText: {
+    color: '#666666',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  editTabButtonTextActive: {
+    color: '#FFFFFF',
+  },
+  editField: {
+    backgroundColor: '#121212',
+    borderRadius: 16,
+    minHeight: 68,
+    paddingHorizontal: 16,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: '#1f1f1f',
+    justifyContent: 'center',
+  },
+  editFieldLabel: {
+    color: '#666666',
+    fontSize: 11,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginBottom: 4,
+  },
+  editFieldInput: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    padding: 0,
+    margin: 0,
+    height: 35,
+  },
+  editFieldValue: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    paddingVertical: 8,
+  },
+  inputError: {
+    borderColor: '#C62828',
+    borderWidth: 1,
+  },
+  errorText: {
+    color: '#C62828',
+    fontSize: 11,
+    marginTop: -4,
+    marginBottom: 8,
+    marginLeft: 12,
+  },
+  editModalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  editModalButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cancelEditButton: {
+    backgroundColor: '#2C2C2E',
+  },
+  cancelEditButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#8E8E93',
+  },
+  updateEditButton: {
+    backgroundColor: '#F29D38',
+  },
+  updateEditButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#000000',
   },
 });
 

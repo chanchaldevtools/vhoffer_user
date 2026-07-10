@@ -2,13 +2,13 @@ import { initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD1EBYCLxKYmEU4aKgjiP_CGRqwFl4i33g",
-  authDomain: "driverapp-21839.firebaseapp.com",
-  projectId: "driverapp-21839",
-  databaseURL: "https://driverapp-21839-default-rtdb.firebaseio.com/",
-  storageBucket: "driverapp-21839.firebasestorage.app",
-  messagingSenderId: "412454711745",
-  appId: "1:412454711745:web:4378996f5dc2d14b0d3f40"
+  apiKey: "AIzaSyDo3PzZFL_3YCs0Fl_WUTJ8j4Lw6dx0XSQ",
+  authDomain: "driverapp-4cb59.firebaseapp.com",
+  projectId: "driverapp-4cb59",
+  storageBucket: "driverapp-4cb59.firebasestorage.app",
+  databaseURL: "https://driverapp-4cb59-default-rtdb.firebaseio.com",
+  messagingSenderId: "294874049573",
+  appId: "1:294874049573:web:a88f375fb35ad1f7c863cc"
 };
 
 // Initialize Firebase

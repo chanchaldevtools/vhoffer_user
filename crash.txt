@@ -1,0 +1,890 @@
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: FATAL EXCEPTION: mqt_v_native
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: Process: com.chauffer, PID: 22733
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: com.facebook.react.common.JavascriptException: TypeError: Cannot read property 'S' of undefined, stack:
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: anonymous@1:78456
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: loadModuleImplementation@1:435207
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: guardedLoadModule@1:434828
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: metroRequire@1:434267
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: anonymous@1:74584
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: loadModuleImplementation@1:435207
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: guardedLoadModule@1:434787
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: metroRequire@1:434267
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: renderElement@1:482118
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: renderApplication@1:617494
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: anonymous@1:1347512
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: runApplication@1:616060
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: 
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: 	at com.facebook.react.modules.core.ExceptionsManagerModule.reportException(ExceptionsManagerModule.kt:52)
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: 	at com.facebook.jni.NativeRunnable.run(Native Method)
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:1014)
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:102)
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadHandler.dispatchMessage(MessageQueueThreadHandler.kt:21)
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:250)
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:340)
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.startNewBackgroundThread$lambda$0(MessageQueueThreadImpl.kt:152)
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.$r8$lambda$YYXYCFexeoKtAeDpeNYkxZZlpbA(MessageQueueThreadImpl.kt:0)
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion$$ExternalSyntheticLambda0.run(R8$$SyntheticClass:0)
+06-24 14:43:35.203 22733 22844 E AndroidRuntime: 	at java.lang.Thread.run(Thread.java:1564)
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: FATAL EXCEPTION: mqt_v_native
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: Process: com.chauffer, PID: 22898
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: com.facebook.react.common.JavascriptException: TypeError: Cannot read property 'S' of undefined, stack:
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: anonymous@1:78456
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: loadModuleImplementation@1:435207
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: guardedLoadModule@1:434828
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: metroRequire@1:434267
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: anonymous@1:74584
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: loadModuleImplementation@1:435207
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: guardedLoadModule@1:434787
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: metroRequire@1:434267
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: renderElement@1:482118
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: renderApplication@1:617494
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: anonymous@1:1347512
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: runApplication@1:616060
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: 
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: 	at com.facebook.react.modules.core.ExceptionsManagerModule.reportException(ExceptionsManagerModule.kt:52)
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: 	at com.facebook.jni.NativeRunnable.run(Native Method)
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:1014)
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:102)
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadHandler.dispatchMessage(MessageQueueThreadHandler.kt:21)
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:250)
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:340)
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.startNewBackgroundThread$lambda$0(MessageQueueThreadImpl.kt:152)
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.$r8$lambda$YYXYCFexeoKtAeDpeNYkxZZlpbA(MessageQueueThreadImpl.kt:0)
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion$$ExternalSyntheticLambda0.run(R8$$SyntheticClass:0)
+06-24 14:43:42.933 22898 22968 E AndroidRuntime: 	at java.lang.Thread.run(Thread.java:1564)
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: FATAL EXCEPTION: mqt_v_native
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: Process: com.chauffer, PID: 23036
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: com.facebook.react.common.JavascriptException: TypeError: Cannot read property 'S' of undefined, stack:
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: anonymous@1:78456
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: loadModuleImplementation@1:435207
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: guardedLoadModule@1:434828
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: metroRequire@1:434267
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: anonymous@1:74584
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: loadModuleImplementation@1:435207
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: guardedLoadModule@1:434787
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: metroRequire@1:434267
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: renderElement@1:482118
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: renderApplication@1:617494
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: anonymous@1:1347512
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: runApplication@1:616060
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: 
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: 	at com.facebook.react.modules.core.ExceptionsManagerModule.reportException(ExceptionsManagerModule.kt:52)
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: 	at com.facebook.jni.NativeRunnable.run(Native Method)
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:1014)
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:102)
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadHandler.dispatchMessage(MessageQueueThreadHandler.kt:21)
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:250)
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:340)
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.startNewBackgroundThread$lambda$0(MessageQueueThreadImpl.kt:152)
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.$r8$lambda$YYXYCFexeoKtAeDpeNYkxZZlpbA(MessageQueueThreadImpl.kt:0)
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion$$ExternalSyntheticLambda0.run(R8$$SyntheticClass:0)
+06-24 14:43:57.873 23036 23099 E AndroidRuntime: 	at java.lang.Thread.run(Thread.java:1564)
+06-24 20:04:34.621  7719  7719 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+06-24 20:45:46.246  4938  4938 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+06-25 08:00:03.449 13530 13530 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+06-25 11:07:56.712 16930 16930 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+06-25 11:08:08.698 17148 17148 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+06-25 11:08:08.953 17200 17200 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+06-25 11:08:09.190 17229 17229 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+06-25 12:16:43.350 20575 20575 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+06-25 12:16:44.202 20689 20689 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+06-25 12:16:44.917 20745 20745 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+06-25 12:27:46.146 14338 14338 I Finsky  : [2] VerifyApps: Install-time verification requested for package com.chauffer, PackageManager id = 141, Verifier id = 5bb30dcf-3609-4d20-98bf-cba9283c3c0a
+06-25 12:27:46.554 14338 21845 I Finsky  : [339] VerifyApps: Anti-malware verification task started for package=com.chauffer
+06-25 12:27:46.846 14338 21845 I Finsky  : [339] VerifyApps: chooseScanResult for package=com.chauffer with timeout=15000ms
+06-25 12:27:46.854 14338 14370 I Finsky  : [252] VerifyApps: Starting APK Analysis scan for com.chauffer.
+06-25 12:27:46.857 14338 14370 I Finsky  : [252] Scanning package com.chauffer contents with client side protections. File: [Keevj-G07CrHGN6gpvsthQDnLanRgw-Ac0koOREtCws]
+06-25 12:27:46.861 14338 14370 I Finsky  : [252] VerifyApps: APK Analysis scan finished for com.chauffer. Verdict: 0
+06-25 12:27:46.868 14338 21845 I Finsky  : [339] VerifyApps: firstScanResult for package=com.chauffer: 0
+06-25 12:27:47.506 14338 21850 I Finsky  : [342] VerifyApps: Verification package=com.chauffer, id=141, response=0, upload_requested=false, enable_ecm=false
+06-25 12:27:47.509 14338 21850 I Finsky  : [342] VerifyApps: PAM result saving to datastore delayed for package: com.chauffer
+06-25 12:27:47.511 14338 21845 I Finsky  : [339] VerifyApps: overallScanResult for package=com.chauffer: 0
+06-25 12:27:47.512 14338 21845 I Finsky  : [339] VerifyApps: chooseScanResult returning verdict 0 for package=com.chauffer
+06-25 12:27:47.541 14338 14338 I Finsky  : [2] VerifyApps: Install-time verification complete: id=141, package_name=com.chauffer
+06-25 12:27:49.619 10755 10755 I SafetyLabelChangedBroadcastReceiver: received broadcast packageName: com.chauffer, current user: UserHandle{0}, packageChangeEvent: NEW_INSTALL, intent user: UserHandle{0}
+06-25 12:27:49.921 18394 21885 I ProximityAuth: [RecentAppsMediator] Package added: (user=UserHandle{0}) com.chauffer
+06-25 12:27:50.124 14338 14373 I Finsky  : [255] AIM: AppInfoManager-Perf > OnDeviceAppInfo > cacheHitCount=0, cacheMissCount=1. Missed  in cache (limit 10) : [com.chauffer]
+06-25 12:27:50.128 14338 14338 I Finsky  : [2] AIM: AppInfoCacheUpdater -> invalidating apps: [com.chauffer]
+06-25 12:27:50.139 14338 14373 I Finsky  : [255] AIM: AppInfoManager-Perf > OnDeviceAppInfo > cacheHitCount=0, cacheMissCount=1. Missed  in cache (limit 10) : [com.chauffer]
+06-25 12:27:50.315 14338 14338 I Finsky  : [2] AIM: AppInfoCacheUpdater -> invalidating apps: [com.chauffer]
+06-25 12:27:50.323 14338 14371 I Finsky  : [253] AIM: AppInfoManager-Perf > OnDeviceAppInfo > cacheHitCount=0, cacheMissCount=1. Missed  in cache (limit 10) : [com.chauffer]
+06-25 12:27:50.818 14338 14338 I Finsky  : [2] Received an install/uninstall event for package com.chauffer
+06-25 12:27:52.378 22058 22058 I com.chauffer: Using CollectorTypeCC GC.
+06-25 12:27:52.398 22058 22058 E com.chauffer: BBinder_init Processname  <pre-initialized>  
+06-25 12:27:52.398 22058 22058 E com.chauffer: BBinder_init hasGetProcessName  <pre-initialized>
+06-25 12:27:52.519 22058 22058 W SoLoader: Recording new base apk path: /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk
+06-25 12:27:52.520 22058 22058 I SoLoader: Preparing SO source: DirectApkSoSource[root = [/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a]]
+06-25 12:27:52.523 22058 22058 I SoLoader: Preparing SO source: ApplicationSoSource[DirectorySoSource[root = /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/lib/arm64 flags = 0]]
+06-25 12:27:52.550 22058 22077 W com.chauffer: ClassLoaderContext classpath size mismatch. expected=1, found=0 (DLC[];PCL[base.apk*3123664114]{PCL[/system/framework/org.apache.http.legacy.jar*1230680128]#PCL[/system/framework/com.android.location.provider.jar*3414091812]#PCL[/system/framework/com.android.media.remotedisplay.jar*2042759013]#PCL[/system_ext/framework/androidx.window.extensions.jar*2202810299]#PCL[/system_ext/framework/androidx.window.sidecar.jar*4192990162]} | DLC[];PCL[])
+06-25 12:27:52.623 22058 22077 W com.chauffer: ClassLoaderContext classpath element checksum mismatch. expected=3123664114, found=673336340 (DLC[];PCL[base.apk*3123664114]{PCL[/system/framework/org.apache.http.legacy.jar*1230680128]#PCL[/system/framework/com.android.location.provider.jar*3414091812]#PCL[/system/framework/com.android.media.remotedisplay.jar*2042759013]#PCL[/system_ext/framework/androidx.window.extensions.jar*2202810299]#PCL[/system_ext/framework/androidx.window.sidecar.jar*4192990162]} | DLC[];PCL[/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk*673336340]{PCL[/system/framework/org.apache.http.legacy.jar*1230680128]})
+06-25 12:27:52.697 18394 18770 I PhenotypeResourceReader: unable to find any Phenotype resource metadata for com.chauffer
+06-25 12:27:52.727 22058 22118 E com.chauffer: No package ID 6a found for resource ID 0x6a0b0013.
+06-25 12:27:52.729 22058 22118 I FA      :   adb shell setprop debug.firebase.analytics.app com.chauffer
+06-25 12:27:53.022  1905  1926 I ActivityTaskManager: Displayed com.chauffer/.MainActivity for user 0: +781ms
+06-25 12:27:53.093  5882  5882 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1454 onStartInput(EditorInfo{EditorInfo{packageName=com.chauffer, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: FATAL EXCEPTION: mqt_v_native
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: Process: com.chauffer, PID: 22058
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: com.facebook.react.common.JavascriptException: Error: Incompatible React versions: The "react" and "react-native-renderer" packages must have the exact same version. Instead got:
+06-25 12:27:53.410 22058 22121 E AndroidRuntime:   - react:                  19.2.0
+06-25 12:27:53.410 22058 22121 E AndroidRuntime:   - react-native-renderer:  19.2.3
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: Learn more: https://react.dev/warnings/version-mismatch, stack:
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: anonymous@1:124537
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: loadModuleImplementation@1:435233
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: guardedLoadModule@1:434854
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: metroRequire@1:434293
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: anonymous@1:118887
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: loadModuleImplementation@1:435233
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: guardedLoadModule@1:434813
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: metroRequire@1:434293
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: getPaperRenderer@1:482664
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: anonymous@1:1278931
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: _connectAnimatedView2@1:740190
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: __makeNative@1:1389525
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: anonymous@1:1392792
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: __makeNative@1:1393825
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: anonymous@1:1394534
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: __makeNative@1:1395045
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: anonymous@1:1398998
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: __makeNative@1:1400814
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: anonymous@1:1396751
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: __makeNative@1:1400719
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: __makeNative@1:1394946
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: anonymous@1:1396751
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: __makeNative@1:1394946
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: anonymous@1:1396751
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: __makeNative@1:1394946
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: __makeNative@1:1393726
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: anonymous@1:1396751
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: __startAnimationIfNative@1:1385389
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: start@1:1409634
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: animate@1:1398633
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: start@1:1381999
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: anonymous@1:1905767
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: commitPassiveMountOnFiber@1:542421
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: flushPassiveEffects@1:561363
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: anonymous@1:1291736
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: 
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: 	at com.facebook.react.modules.core.ExceptionsManagerModule.reportException(ExceptionsManagerModule.kt:52)
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: 	at com.facebook.jni.NativeRunnable.run(Native Method)
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:1014)
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:102)
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadHandler.dispatchMessage(MessageQueueThreadHandler.kt:21)
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:250)
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:340)
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.startNewBackgroundThread$lambda$0(MessageQueueThreadImpl.kt:152)
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.$r8$lambda$YYXYCFexeoKtAeDpeNYkxZZlpbA(MessageQueueThreadImpl.kt:0)
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion$$ExternalSyntheticLambda0.run(R8$$SyntheticClass:0)
+06-25 12:27:53.410 22058 22121 E AndroidRuntime: 	at java.lang.Thread.run(Thread.java:1564)
+06-25 12:27:53.845 16461 22148 W FA-SVC  : Config not found. Using empty config. appId: com.chauffer
+06-25 12:27:53.854 16461 22148 W FA-SVC  : Did not find measurement config or missing version info. appId: com.chauffer
+06-25 12:27:53.861 16461 22148 W FA-SVC  : Did not find measurement config or missing version info. appId: com.chauffer
+06-25 12:27:54.734 14338 14371 I Finsky  : [253] Installer package name of package com.chauffer is 
+06-25 12:27:56.563 22250 22250 I com.chauffer: Using CollectorTypeCC GC.
+06-25 12:27:56.594 22250 22250 E com.chauffer: BBinder_init Processname  <pre-initialized>  
+06-25 12:27:56.594 22250 22250 E com.chauffer: BBinder_init hasGetProcessName  <pre-initialized>
+06-25 12:27:56.709 22250 22250 W SoLoader: Recording new base apk path: /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk
+06-25 12:27:56.711 22250 22250 I SoLoader: Preparing SO source: DirectApkSoSource[root = [/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a]]
+06-25 12:27:56.714 22250 22250 I SoLoader: Preparing SO source: ApplicationSoSource[DirectorySoSource[root = /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/lib/arm64 flags = 0]]
+06-25 12:27:56.719 22250 22268 W com.chauffer: ClassLoaderContext classpath size mismatch. expected=1, found=0 (DLC[];PCL[base.apk*3123664114]{PCL[/system/framework/org.apache.http.legacy.jar*1230680128]#PCL[/system/framework/com.android.location.provider.jar*3414091812]#PCL[/system/framework/com.android.media.remotedisplay.jar*2042759013]#PCL[/system_ext/framework/androidx.window.extensions.jar*2202810299]#PCL[/system_ext/framework/androidx.window.sidecar.jar*4192990162]} | DLC[];PCL[])
+06-25 12:27:56.784 22250 22268 W com.chauffer: ClassLoaderContext classpath element checksum mismatch. expected=3123664114, found=673336340 (DLC[];PCL[base.apk*3123664114]{PCL[/system/framework/org.apache.http.legacy.jar*1230680128]#PCL[/system/framework/com.android.location.provider.jar*3414091812]#PCL[/system/framework/com.android.media.remotedisplay.jar*2042759013]#PCL[/system_ext/framework/androidx.window.extensions.jar*2202810299]#PCL[/system_ext/framework/androidx.window.sidecar.jar*4192990162]} | DLC[];PCL[/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk*673336340]{PCL[/system/framework/org.apache.http.legacy.jar*1230680128]})
+06-25 12:27:56.843 18394 18438 I PhenotypeResourceReader: unable to find any Phenotype resource metadata for com.chauffer
+06-25 12:27:56.876 22250 22307 E com.chauffer: No package ID 6a found for resource ID 0x6a0b0013.
+06-25 12:27:56.877 22250 22307 I FA      :   adb shell setprop debug.firebase.analytics.app com.chauffer
+06-25 12:27:57.063  1905  1926 I ActivityTaskManager: Displayed com.chauffer/.MainActivity for user 0: +600ms
+06-25 12:27:57.071  5882  5882 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1454 onStartInput(EditorInfo{EditorInfo{packageName=com.chauffer, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: FATAL EXCEPTION: mqt_v_native
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: Process: com.chauffer, PID: 22250
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: com.facebook.react.common.JavascriptException: Error: Incompatible React versions: The "react" and "react-native-renderer" packages must have the exact same version. Instead got:
+06-25 12:27:57.340 22250 22310 E AndroidRuntime:   - react:                  19.2.0
+06-25 12:27:57.340 22250 22310 E AndroidRuntime:   - react-native-renderer:  19.2.3
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: Learn more: https://react.dev/warnings/version-mismatch, stack:
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: anonymous@1:124537
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: loadModuleImplementation@1:435233
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: guardedLoadModule@1:434854
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: metroRequire@1:434293
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: anonymous@1:118887
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: loadModuleImplementation@1:435233
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: guardedLoadModule@1:434813
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: metroRequire@1:434293
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: getPaperRenderer@1:482664
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: anonymous@1:1278931
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: _connectAnimatedView2@1:740190
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: __makeNative@1:1389525
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: anonymous@1:1392792
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: __makeNative@1:1393825
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: anonymous@1:1394534
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: __makeNative@1:1395045
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: anonymous@1:1398998
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: __makeNative@1:1400814
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: anonymous@1:1396751
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: __makeNative@1:1400719
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: __makeNative@1:1394946
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: anonymous@1:1396751
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: __makeNative@1:1394946
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: anonymous@1:1396751
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: __makeNative@1:1394946
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: __makeNative@1:1393726
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: anonymous@1:1396751
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: __startAnimationIfNative@1:1385389
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: start@1:1409634
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: animate@1:1398633
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: start@1:1381999
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: anonymous@1:1905767
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: commitPassiveMountOnFiber@1:542421
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: flushPassiveEffects@1:561363
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: anonymous@1:1291736
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: 
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: 	at com.facebook.react.modules.core.ExceptionsManagerModule.reportException(ExceptionsManagerModule.kt:52)
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: 	at com.facebook.jni.NativeRunnable.run(Native Method)
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:1014)
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:102)
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadHandler.dispatchMessage(MessageQueueThreadHandler.kt:21)
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:250)
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:340)
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.startNewBackgroundThread$lambda$0(MessageQueueThreadImpl.kt:152)
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.$r8$lambda$YYXYCFexeoKtAeDpeNYkxZZlpbA(MessageQueueThreadImpl.kt:0)
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion$$ExternalSyntheticLambda0.run(R8$$SyntheticClass:0)
+06-25 12:27:57.340 22250 22310 E AndroidRuntime: 	at java.lang.Thread.run(Thread.java:1564)
+06-25 12:28:27.910  2506  2506 W msgr.AppInfoCore: Install status cache EVICT for com.chauffer (package changed)
+06-25 12:28:27.910  2506  2506 W msgr.AppInfoCore: Install status cache EVICT for com.chauffer (package changed)
+06-25 12:28:27.910  2506  2506 W msgr.AppInfoCore: Install status cache EVICT for com.chauffer (package changed)
+06-25 12:28:52.359 22430 22430 I com.chauffer: Using CollectorTypeCC GC.
+06-25 12:28:52.464 22430 22430 E com.chauffer: BBinder_init Processname  <pre-initialized>  
+06-25 12:28:52.465 22430 22430 E com.chauffer: BBinder_init hasGetProcessName  <pre-initialized>
+06-25 12:28:52.575 22430 22430 W SoLoader: Recording new base apk path: /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk
+06-25 12:28:52.577 22430 22430 I SoLoader: Preparing SO source: DirectApkSoSource[root = [/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a]]
+06-25 12:28:52.580 22430 22430 I SoLoader: Preparing SO source: ApplicationSoSource[DirectorySoSource[root = /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/lib/arm64 flags = 0]]
+06-25 12:28:52.585 22430 22460 W com.chauffer: ClassLoaderContext classpath size mismatch. expected=1, found=0 (DLC[];PCL[base.apk*3123664114]{PCL[/system/framework/org.apache.http.legacy.jar*1230680128]#PCL[/system/framework/com.android.location.provider.jar*3414091812]#PCL[/system/framework/com.android.media.remotedisplay.jar*2042759013]#PCL[/system_ext/framework/androidx.window.extensions.jar*2202810299]#PCL[/system_ext/framework/androidx.window.sidecar.jar*4192990162]} | DLC[];PCL[])
+06-25 12:28:52.643 22430 22460 W com.chauffer: ClassLoaderContext classpath element checksum mismatch. expected=3123664114, found=673336340 (DLC[];PCL[base.apk*3123664114]{PCL[/system/framework/org.apache.http.legacy.jar*1230680128]#PCL[/system/framework/com.android.location.provider.jar*3414091812]#PCL[/system/framework/com.android.media.remotedisplay.jar*2042759013]#PCL[/system_ext/framework/androidx.window.extensions.jar*2202810299]#PCL[/system_ext/framework/androidx.window.sidecar.jar*4192990162]} | DLC[];PCL[/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk*673336340]{PCL[/system/framework/org.apache.http.legacy.jar*1230680128]})
+06-25 12:28:52.708 18394 18471 I PhenotypeResourceReader: unable to find any Phenotype resource metadata for com.chauffer
+06-25 12:28:52.724 22430 22504 E com.chauffer: No package ID 6a found for resource ID 0x6a0b0013.
+06-25 12:28:52.725 22430 22504 I FA      :   adb shell setprop debug.firebase.analytics.app com.chauffer
+06-25 12:28:52.856  1905  1926 I ActivityTaskManager: Displayed com.chauffer/.MainActivity for user 0: +532ms
+06-25 12:28:52.893  5882  5882 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1454 onStartInput(EditorInfo{EditorInfo{packageName=com.chauffer, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: FATAL EXCEPTION: mqt_v_native
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: Process: com.chauffer, PID: 22430
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: com.facebook.react.common.JavascriptException: Error: Incompatible React versions: The "react" and "react-native-renderer" packages must have the exact same version. Instead got:
+06-25 12:28:53.134 22430 22507 E AndroidRuntime:   - react:                  19.2.0
+06-25 12:28:53.134 22430 22507 E AndroidRuntime:   - react-native-renderer:  19.2.3
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: Learn more: https://react.dev/warnings/version-mismatch, stack:
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: anonymous@1:124537
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: loadModuleImplementation@1:435233
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: guardedLoadModule@1:434854
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: metroRequire@1:434293
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: anonymous@1:118887
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: loadModuleImplementation@1:435233
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: guardedLoadModule@1:434813
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: metroRequire@1:434293
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: getPaperRenderer@1:482664
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: anonymous@1:1278931
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: _connectAnimatedView2@1:740190
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: __makeNative@1:1389525
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: anonymous@1:1392792
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: __makeNative@1:1393825
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: anonymous@1:1394534
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: __makeNative@1:1395045
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: anonymous@1:1398998
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: __makeNative@1:1400814
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: anonymous@1:1396751
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: __makeNative@1:1400719
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: __makeNative@1:1394946
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: anonymous@1:1396751
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: __makeNative@1:1394946
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: anonymous@1:1396751
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: __makeNative@1:1394946
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: __makeNative@1:1393726
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: anonymous@1:1396751
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: __startAnimationIfNative@1:1385389
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: start@1:1409634
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: animate@1:1398633
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: start@1:1381999
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: anonymous@1:1905767
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: commitPassiveMountOnFiber@1:542421
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: flushPassiveEffects@1:561363
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: anonymous@1:1291736
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: 
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: 	at com.facebook.react.modules.core.ExceptionsManagerModule.reportException(ExceptionsManagerModule.kt:52)
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: 	at com.facebook.jni.NativeRunnable.run(Native Method)
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:1014)
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:102)
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadHandler.dispatchMessage(MessageQueueThreadHandler.kt:21)
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:250)
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:340)
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.startNewBackgroundThread$lambda$0(MessageQueueThreadImpl.kt:152)
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.$r8$lambda$YYXYCFexeoKtAeDpeNYkxZZlpbA(MessageQueueThreadImpl.kt:0)
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion$$ExternalSyntheticLambda0.run(R8$$SyntheticClass:0)
+06-25 12:28:53.134 22430 22507 E AndroidRuntime: 	at java.lang.Thread.run(Thread.java:1564)
+06-25 12:29:18.198 22575 22575 I com.chauffer: Using CollectorTypeCC GC.
+06-25 12:29:18.223 22575 22575 E com.chauffer: BBinder_init Processname  <pre-initialized>  
+06-25 12:29:18.223 22575 22575 E com.chauffer: BBinder_init hasGetProcessName  <pre-initialized>
+06-25 12:29:18.257 22575 22575 D nativeloader: Configuring clns-7 for other apk /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk. target_sdk_version=36, uses_libraries=, library_path=/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/lib/arm64:/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/com.chauffer
+06-25 12:29:18.271 22575 22575 V GraphicsEnvironment: com.chauffer is not listed in per-application setting
+06-25 12:29:18.330 22575 22575 W SoLoader: Recording new base apk path: /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk
+06-25 12:29:18.332 22575 22575 I SoLoader: Preparing SO source: DirectApkSoSource[root = [/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a]]
+06-25 12:29:18.335 22575 22575 I SoLoader: Preparing SO source: ApplicationSoSource[DirectorySoSource[root = /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/lib/arm64 flags = 0]]
+06-25 12:29:18.339 22575 22599 W com.chauffer: ClassLoaderContext classpath size mismatch. expected=1, found=0 (DLC[];PCL[base.apk*3123664114]{PCL[/system/framework/org.apache.http.legacy.jar*1230680128]#PCL[/system/framework/com.android.location.provider.jar*3414091812]#PCL[/system/framework/com.android.media.remotedisplay.jar*2042759013]#PCL[/system_ext/framework/androidx.window.extensions.jar*2202810299]#PCL[/system_ext/framework/androidx.window.sidecar.jar*4192990162]} | DLC[];PCL[])
+06-25 12:29:18.348 22575 22575 D nativeloader: Load /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a/libc++_shared.so using class loader ns clns-7 (caller=/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk): ok
+06-25 12:29:18.354 22575 22575 D nativeloader: Load /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a/libjsi.so using class loader ns clns-7 (caller=/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk): ok
+06-25 12:29:18.360 22575 22575 D nativeloader: Load /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a/libfbjni.so using class loader ns clns-7 (caller=/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk): ok
+06-25 12:29:18.368 22575 22575 D nativeloader: Load /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a/libreactnative.so using class loader ns clns-7 (caller=/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk): ok
+06-25 12:29:18.378 22575 22575 D nativeloader: Load /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a/libreact_codegen_rnscreens.so using class loader ns clns-7 (caller=/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk): ok
+06-25 12:29:18.383 22575 22575 D nativeloader: Load /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a/libreact_codegen_rnsvg.so using class loader ns clns-7 (caller=/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk): ok
+06-25 12:29:18.387 22575 22599 W com.chauffer: ClassLoaderContext classpath element checksum mismatch. expected=3123664114, found=673336340 (DLC[];PCL[base.apk*3123664114]{PCL[/system/framework/org.apache.http.legacy.jar*1230680128]#PCL[/system/framework/com.android.location.provider.jar*3414091812]#PCL[/system/framework/com.android.media.remotedisplay.jar*2042759013]#PCL[/system_ext/framework/androidx.window.extensions.jar*2202810299]#PCL[/system_ext/framework/androidx.window.sidecar.jar*4192990162]} | DLC[];PCL[/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk*673336340]{PCL[/system/framework/org.apache.http.legacy.jar*1230680128]})
+06-25 12:29:18.388 22575 22575 D nativeloader: Load /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a/libreact_codegen_safeareacontext.so using class loader ns clns-7 (caller=/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk): ok
+06-25 12:29:18.392 22575 22575 D nativeloader: Load /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a/libappmodules.so using class loader ns clns-7 (caller=/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk): ok
+06-25 12:29:18.443 22575 22575 D nativeloader: Load /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a/libhermesvm.so using class loader ns clns-7 (caller=/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk): ok
+06-25 12:29:18.444 22575 22575 D nativeloader: Load /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a/libhermestooling.so using class loader ns clns-7 (caller=/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk): ok
+06-25 12:29:18.445 18394 18770 I PhenotypeResourceReader: unable to find any Phenotype resource metadata for com.chauffer
+06-25 12:29:18.479 22575 22637 E com.chauffer: No package ID 6a found for resource ID 0x6a0b0013.
+06-25 12:29:18.481 22575 22637 I FA      :   adb shell setprop debug.firebase.analytics.app com.chauffer
+06-25 12:29:18.593  1905  1926 I ActivityTaskManager: Displayed com.chauffer/.MainActivity for user 0: +436ms
+06-25 12:29:18.627  5882  5882 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1454 onStartInput(EditorInfo{EditorInfo{packageName=com.chauffer, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: FATAL EXCEPTION: mqt_v_native
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: Process: com.chauffer, PID: 22575
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: com.facebook.react.common.JavascriptException: Error: Incompatible React versions: The "react" and "react-native-renderer" packages must have the exact same version. Instead got:
+06-25 12:29:18.912 22575 22642 E AndroidRuntime:   - react:                  19.2.0
+06-25 12:29:18.912 22575 22642 E AndroidRuntime:   - react-native-renderer:  19.2.3
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: Learn more: https://react.dev/warnings/version-mismatch, stack:
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: anonymous@1:124537
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: loadModuleImplementation@1:435233
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: guardedLoadModule@1:434854
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: metroRequire@1:434293
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: anonymous@1:118887
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: loadModuleImplementation@1:435233
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: guardedLoadModule@1:434813
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: metroRequire@1:434293
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: getPaperRenderer@1:482664
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: anonymous@1:1278931
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: _connectAnimatedView2@1:740190
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: __makeNative@1:1389525
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: anonymous@1:1392792
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: __makeNative@1:1393825
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: anonymous@1:1394534
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: __makeNative@1:1395045
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: anonymous@1:1398998
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: __makeNative@1:1400814
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: anonymous@1:1396751
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: __makeNative@1:1400719
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: __makeNative@1:1394946
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: anonymous@1:1396751
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: __makeNative@1:1394946
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: anonymous@1:1396751
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: __makeNative@1:1394946
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: __makeNative@1:1393726
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: anonymous@1:1396751
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: __startAnimationIfNative@1:1385389
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: start@1:1409634
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: animate@1:1398633
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: start@1:1381999
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: anonymous@1:1905767
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: commitPassiveMountOnFiber@1:542421
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: flushPassiveEffects@1:561363
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: anonymous@1:1291736
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: 
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: 	at com.facebook.react.modules.core.ExceptionsManagerModule.reportException(ExceptionsManagerModule.kt:52)
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: 	at com.facebook.jni.NativeRunnable.run(Native Method)
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:1014)
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:102)
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadHandler.dispatchMessage(MessageQueueThreadHandler.kt:21)
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:250)
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:340)
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.startNewBackgroundThread$lambda$0(MessageQueueThreadImpl.kt:152)
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.$r8$lambda$YYXYCFexeoKtAeDpeNYkxZZlpbA(MessageQueueThreadImpl.kt:0)
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion$$ExternalSyntheticLambda0.run(R8$$SyntheticClass:0)
+06-25 12:29:18.912 22575 22642 E AndroidRuntime: 	at java.lang.Thread.run(Thread.java:1564)
+06-25 12:34:02.525 23082 23082 I com.chauffer: Using CollectorTypeCC GC.
+06-25 12:34:02.550 23082 23082 E com.chauffer: BBinder_init Processname  <pre-initialized>  
+06-25 12:34:02.550 23082 23082 E com.chauffer: BBinder_init hasGetProcessName  <pre-initialized>
+06-25 12:34:02.646 23082 23101 W com.chauffer: ClassLoaderContext classpath size mismatch. expected=1, found=0 (DLC[];PCL[base.apk*3123664114]{PCL[/system/framework/org.apache.http.legacy.jar*1230680128]#PCL[/system/framework/com.android.location.provider.jar*3414091812]#PCL[/system/framework/com.android.media.remotedisplay.jar*2042759013]#PCL[/system_ext/framework/androidx.window.extensions.jar*2202810299]#PCL[/system_ext/framework/androidx.window.sidecar.jar*4192990162]} | DLC[];PCL[])
+06-25 12:34:02.647 23082 23082 W SoLoader: Recording new base apk path: /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk
+06-25 12:34:02.648 23082 23082 I SoLoader: Preparing SO source: DirectApkSoSource[root = [/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a]]
+06-25 12:34:02.651 23082 23082 I SoLoader: Preparing SO source: ApplicationSoSource[DirectorySoSource[root = /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/lib/arm64 flags = 0]]
+06-25 12:34:02.694 23082 23101 W com.chauffer: ClassLoaderContext classpath element checksum mismatch. expected=3123664114, found=673336340 (DLC[];PCL[base.apk*3123664114]{PCL[/system/framework/org.apache.http.legacy.jar*1230680128]#PCL[/system/framework/com.android.location.provider.jar*3414091812]#PCL[/system/framework/com.android.media.remotedisplay.jar*2042759013]#PCL[/system_ext/framework/androidx.window.extensions.jar*2202810299]#PCL[/system_ext/framework/androidx.window.sidecar.jar*4192990162]} | DLC[];PCL[/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk*673336340]{PCL[/system/framework/org.apache.http.legacy.jar*1230680128]})
+06-25 12:34:02.759 18394 18770 I PhenotypeResourceReader: unable to find any Phenotype resource metadata for com.chauffer
+06-25 12:34:02.778 23082 23138 E com.chauffer: No package ID 6a found for resource ID 0x6a0b0013.
+06-25 12:34:02.779 23082 23138 I FA      :   adb shell setprop debug.firebase.analytics.app com.chauffer
+06-25 12:34:02.981  1905  1926 I ActivityTaskManager: Displayed com.chauffer/.MainActivity for user 0: +571ms
+06-25 12:34:03.005  5882  5882 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1454 onStartInput(EditorInfo{EditorInfo{packageName=com.chauffer, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: FATAL EXCEPTION: mqt_v_native
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: Process: com.chauffer, PID: 23082
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: com.facebook.react.common.JavascriptException: Error: Incompatible React versions: The "react" and "react-native-renderer" packages must have the exact same version. Instead got:
+06-25 12:34:03.243 23082 23143 E AndroidRuntime:   - react:                  19.2.0
+06-25 12:34:03.243 23082 23143 E AndroidRuntime:   - react-native-renderer:  19.2.3
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: Learn more: https://react.dev/warnings/version-mismatch, stack:
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: anonymous@1:124537
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: loadModuleImplementation@1:435233
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: guardedLoadModule@1:434854
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: metroRequire@1:434293
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: anonymous@1:118887
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: loadModuleImplementation@1:435233
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: guardedLoadModule@1:434813
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: metroRequire@1:434293
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: getPaperRenderer@1:482664
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: anonymous@1:1278931
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: _connectAnimatedView2@1:740190
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: __makeNative@1:1389525
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: anonymous@1:1392792
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: __makeNative@1:1393825
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: anonymous@1:1394534
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: __makeNative@1:1395045
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: anonymous@1:1398998
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: __makeNative@1:1400814
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: anonymous@1:1396751
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: __makeNative@1:1400719
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: __makeNative@1:1394946
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: anonymous@1:1396751
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: __makeNative@1:1394946
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: anonymous@1:1396751
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: __makeNative@1:1394946
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: __makeNative@1:1393726
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: anonymous@1:1396751
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: __startAnimationIfNative@1:1385389
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: start@1:1409634
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: animate@1:1398633
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: start@1:1381999
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: anonymous@1:1905767
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: commitPassiveMountOnFiber@1:542421
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: flushPassiveEffects@1:561363
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: anonymous@1:1291736
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: 
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: 	at com.facebook.react.modules.core.ExceptionsManagerModule.reportException(ExceptionsManagerModule.kt:52)
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: 	at com.facebook.jni.NativeRunnable.run(Native Method)
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:1014)
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:102)
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadHandler.dispatchMessage(MessageQueueThreadHandler.kt:21)
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:250)
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:340)
+06-25 12:34:03.243 23082 23143 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.startNewBackgroundThread$lambda$0(MessageQueueThreadImpl.kt:152)
+06-25 12:34:03.244 23082 23143 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.$r8$lambda$YYXYCFexeoKtAeDpeNYkxZZlpbA(MessageQueueThreadImpl.kt:0)
+06-25 12:34:03.244 23082 23143 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion$$ExternalSyntheticLambda0.run(R8$$SyntheticClass:0)
+06-25 12:34:03.244 23082 23143 E AndroidRuntime: 	at java.lang.Thread.run(Thread.java:1564)
+06-25 12:35:42.398 16461 16467 W gle.android.gms: ApkAssets: Deleting an ApkAssets object '<empty> and /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk' with 1 weak references
+06-25 12:37:57.355 18394 18481 I PhenotypeResourceReader: unable to find any Phenotype resource metadata for com.chauffer
+06-25 12:37:57.500  1905  1926 I ActivityTaskManager: Displayed com.chauffer/.MainActivity for user 0: +517ms
+06-25 12:37:57.564  5882  5882 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1454 onStartInput(EditorInfo{EditorInfo{packageName=com.chauffer, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: FATAL EXCEPTION: mqt_v_native
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: Process: com.chauffer, PID: 23358
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: com.facebook.react.common.JavascriptException: Error: Incompatible React versions: The "react" and "react-native-renderer" packages must have the exact same version. Instead got:
+06-25 12:37:57.822 23358 23432 E AndroidRuntime:   - react:                  19.2.0
+06-25 12:37:57.822 23358 23432 E AndroidRuntime:   - react-native-renderer:  19.2.3
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: Learn more: https://react.dev/warnings/version-mismatch, stack:
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: anonymous@1:124537
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: loadModuleImplementation@1:435233
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: guardedLoadModule@1:434854
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: metroRequire@1:434293
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: anonymous@1:118887
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: loadModuleImplementation@1:435233
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: guardedLoadModule@1:434813
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: metroRequire@1:434293
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: getPaperRenderer@1:482664
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: anonymous@1:1278931
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: _connectAnimatedView2@1:740190
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: __makeNative@1:1389525
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: anonymous@1:1392792
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: __makeNative@1:1393825
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: anonymous@1:1394534
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: __makeNative@1:1395045
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: anonymous@1:1398998
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: __makeNative@1:1400814
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: anonymous@1:1396751
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: __makeNative@1:1400719
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: __makeNative@1:1394946
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: anonymous@1:1396751
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: __makeNative@1:1394946
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: anonymous@1:1396751
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: __makeNative@1:1394946
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: __makeNative@1:1393726
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: __makeNative@1:1391878
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: anonymous@1:1396751
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: __makeNative@1:1397339
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: __startAnimationIfNative@1:1385389
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: start@1:1409634
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: animate@1:1398633
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: start@1:1381999
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: anonymous@1:1905767
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542563
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542614
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:541756
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: commitPassiveMountOnFiber@1:542421
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: flushPassiveEffects@1:561363
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: anonymous@1:1291736
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: 
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: 	at com.facebook.react.modules.core.ExceptionsManagerModule.reportException(ExceptionsManagerModule.kt:52)
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: 	at com.facebook.jni.NativeRunnable.run(Native Method)
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:1014)
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:102)
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadHandler.dispatchMessage(MessageQueueThreadHandler.kt:21)
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:250)
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:340)
+06-25 12:37:57.822 23358 23432 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.startNewBackgroundThread$lambda$0(MessageQueueThreadImpl.kt:152)
+06-25 12:37:57.823 23358 23432 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.$r8$lambda$YYXYCFexeoKtAeDpeNYkxZZlpbA(MessageQueueThreadImpl.kt:0)
+06-25 12:37:57.823 23358 23432 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion$$ExternalSyntheticLambda0.run(R8$$SyntheticClass:0)
+06-25 12:37:57.823 23358 23432 E AndroidRuntime: 	at java.lang.Thread.run(Thread.java:1564)
+06-25 12:37:59.331 23482 23482 I com.chauffer: Using CollectorTypeCC GC.
+06-25 12:37:59.373 23482 23482 E com.chauffer: BBinder_init Processname  <pre-initialized>  
+06-25 12:37:59.373 23482 23482 E com.chauffer: BBinder_init hasGetProcessName  <pre-initialized>
+06-25 12:37:59.407 23482 23482 D nativeloader: Configuring clns-7 for other apk /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk. target_sdk_version=36, uses_libraries=, library_path=/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/lib/arm64:/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/com.chauffer
+06-25 12:37:59.425 23482 23482 V GraphicsEnvironment: com.chauffer is not listed in per-application setting
+06-25 12:37:59.488 23482 23504 W com.chauffer: ClassLoaderContext classpath size mismatch. expected=1, found=0 (DLC[];PCL[base.apk*3123664114]{PCL[/system/framework/org.apache.http.legacy.jar*1230680128]#PCL[/system/framework/com.android.location.provider.jar*3414091812]#PCL[/system/framework/com.android.media.remotedisplay.jar*2042759013]#PCL[/system_ext/framework/androidx.window.extensions.jar*2202810299]#PCL[/system_ext/framework/androidx.window.sidecar.jar*4192990162]} | DLC[];PCL[])
+06-25 12:37:59.490 23482 23482 W SoLoader: Recording new base apk path: /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk
+06-25 12:37:59.491 23482 23482 I SoLoader: Preparing SO source: DirectApkSoSource[root = [/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a]]
+06-25 12:37:59.495 23482 23482 I SoLoader: Preparing SO source: ApplicationSoSource[DirectorySoSource[root = /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/lib/arm64 flags = 0]]
+06-25 12:37:59.507 23482 23482 D nativeloader: Load /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a/libc++_shared.so using class loader ns clns-7 (caller=/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk): ok
+06-25 12:37:59.513 23482 23482 D nativeloader: Load /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a/libjsi.so using class loader ns clns-7 (caller=/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk): ok
+06-25 12:37:59.518 23482 23482 D nativeloader: Load /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a/libfbjni.so using class loader ns clns-7 (caller=/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk): ok
+06-25 12:37:59.523 23482 23482 D nativeloader: Load /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a/libreactnative.so using class loader ns clns-7 (caller=/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk): ok
+06-25 12:37:59.539 23482 23482 D nativeloader: Load /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a/libreact_codegen_rnscreens.so using class loader ns clns-7 (caller=/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk): ok
+06-25 12:37:59.545 23482 23482 D nativeloader: Load /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a/libreact_codegen_rnsvg.so using class loader ns clns-7 (caller=/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk): ok
+06-25 12:37:59.550 23482 23482 D nativeloader: Load /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a/libreact_codegen_safeareacontext.so using class loader ns clns-7 (caller=/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk): ok
+06-25 12:37:59.553 23482 23482 D nativeloader: Load /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a/libappmodules.so using class loader ns clns-7 (caller=/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk): ok
+06-25 12:37:59.566 23482 23504 W com.chauffer: ClassLoaderContext classpath element checksum mismatch. expected=3123664114, found=673336340 (DLC[];PCL[base.apk*3123664114]{PCL[/system/framework/org.apache.http.legacy.jar*1230680128]#PCL[/system/framework/com.android.location.provider.jar*3414091812]#PCL[/system/framework/com.android.media.remotedisplay.jar*2042759013]#PCL[/system_ext/framework/androidx.window.extensions.jar*2202810299]#PCL[/system_ext/framework/androidx.window.sidecar.jar*4192990162]} | DLC[];PCL[/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk*673336340]{PCL[/system/framework/org.apache.http.legacy.jar*1230680128]})
+06-25 12:37:59.633 23482 23482 D nativeloader: Load /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a/libhermesvm.so using class loader ns clns-7 (caller=/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk): ok
+06-25 12:37:59.636 23482 23482 D nativeloader: Load /data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk!/lib/arm64-v8a/libhermestooling.so using class loader ns clns-7 (caller=/data/app/~~GuoLTfRz3-rvCwvpSwsYyQ==/com.chauffer-17jrlCd7CULChcdH5eODWg==/base.apk): ok
+06-25 12:37:59.684 18394 18471 I PhenotypeResourceReader: unable to find any Phenotype resource metadata for com.chauffer
+06-25 12:37:59.750 23482 23538 E com.chauffer: No package ID 6a found for resource ID 0x6a0b0013.
+06-25 12:37:59.753 23482 23538 I FA      :   adb shell setprop debug.firebase.analytics.app com.chauffer
+06-25 12:37:59.831  1905  1926 I ActivityTaskManager: Displayed com.chauffer/.MainActivity for user 0: +517ms
+06-25 12:37:59.925  5882  5882 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1454 onStartInput(EditorInfo{EditorInfo{packageName=com.chauffer, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)

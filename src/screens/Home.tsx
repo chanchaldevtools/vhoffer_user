@@ -21,6 +21,7 @@ import { useNavigation } from '@react-navigation/native';
 import { loginUser } from '../services/authService';
 import { AuthContext } from '../../App';
 import apiClient from '../services/apiConfig';
+import messaging from '@react-native-firebase/messaging';
 
 const { width, height } = Dimensions.get('window');
 
@@ -59,6 +60,29 @@ export default function CarInteriorScreen() {
       }).start();
     }
   }, [forgotModalVisible]);
+
+  // Function to get FCM Token
+  const getFCMToken = async () => {
+    try {
+      // Request permission
+      const authStatus = await messaging().requestPermission();
+      const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+                      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+      if (!enabled) {
+        console.log('Notification permission not granted');
+        return null;
+      }
+
+      // Get the FCM token
+      const token = await messaging().getToken();
+      console.log('FCM Token:', token);
+      return token;
+    } catch (error) {
+      console.error('Error getting FCM token:', error);
+      return null;
+    }
+  };
 
   // Combined function to show either error or success alerts
   const showToast = (message, type = 'error') => {
@@ -112,24 +136,34 @@ export default function CarInteriorScreen() {
     setIsLoading(true);
     setErrors({});
 
-    const result = await loginUser(email, password);
-
-    if (result.success) {
-      isNavigating.current = true;
+    try {
+      // Get FCM token before login
+      const fcmToken = await getFCMToken();
       
-      setTimeout(() => {
-        setIsLoggedIn(true);
-        navigation.replace('Authenticated');
+      // Call login with email, password, and FCM token
+      const result = await loginUser(email, password, fcmToken);
+
+      if (result.success) {
+        isNavigating.current = true;
         
         setTimeout(() => {
-          isNavigating.current = false;
-        }, 500);
-      }, 1500);
-    } else {
-      showToast(result.message, 'error');
-      if (result.errors && Object.keys(result.errors).length > 0) {
-        setErrors(result.errors);
+          setIsLoggedIn(true);
+          navigation.replace('Authenticated');
+          
+          setTimeout(() => {
+            isNavigating.current = false;
+          }, 500);
+        }, 1500);
+      } else {
+        showToast(result.message, 'error');
+        if (result.errors && Object.keys(result.errors).length > 0) {
+          setErrors(result.errors);
+        }
+        setIsLoading(false);
       }
+    } catch (error) {
+      console.error('Login error:', error);
+      showToast('An error occurred during login', 'error');
       setIsLoading(false);
     }
   };

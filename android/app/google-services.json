@@ -1,21 +1,30 @@
 {
   "project_info": {
-    "project_number": "927015020907",
-    "project_id": "chaufferuserapp",
-    "storage_bucket": "chaufferuserapp.firebasestorage.app"
+    "project_number": "926207989041",
+    "project_id": "notificationdriver-56c21",
+    "storage_bucket": "notificationdriver-56c21.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:927015020907:android:3280732f630b507b70042e",
+        "mobilesdk_app_id": "1:926207989041:android:c13384e5fbb6d2c7df4c10",
         "android_client_info": {
           "package_name": "com.chauffer"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "926207989041-oq5lla37437bqd4997389h7tcac594c0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.chauffer",
+            "certificate_hash": "1430bb225607bdaf39a140e05614ff9a91054488"
+          }
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyCNIocq0OUkD7gDpZyge17VQq0YSAWv_Rc"
+          "current_key": "AIzaSyCwYRIlSCE7b2jYUnklXjlfKgtKeqr1aK0"
         }
       ],
       "services": {

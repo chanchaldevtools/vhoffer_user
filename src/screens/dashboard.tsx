@@ -370,7 +370,7 @@ export default function App() {
   const googleAutocompleteStyles = {
     container: {
       flex: 1,
-      zIndex: 999,
+    
     },
     textInputContainer: {
       backgroundColor: 'transparent',
@@ -512,7 +512,7 @@ export default function App() {
                           query={{
                             key: GOOGLE_PLACES_API_KEY,
                             language: 'en',
-                            types: 'geocode',
+                            types: 'establishment',
                           }}
                           styles={googleAutocompleteStyles}
                           textInputProps={{

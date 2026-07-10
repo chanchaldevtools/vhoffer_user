@@ -17,18 +17,26 @@ import {
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useFocusEffect, useRoute } from '@react-navigation/native';
-import Svg, { Path, Circle, Rect } from 'react-native-svg';
+import Svg, { Path, Circle } from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import apiClient from '../services/apiConfig';
-// Pusher Setup
+
+// ============ PUSHER SETUP - CORRECT ============
 import 'react-native-get-random-values';
-const Pusher = require('pusher-js');
-const { decode, encode } = require('base-64');
+import Pusher from 'pusher-js/react-native';
+import { decode, encode } from 'base-64';
 
 if (!global.btoa) global.btoa = encode;
 if (!global.atob) global.atob = decode;
+
+// WebSocket polyfill for React Native
 if (!global.WebSocket) {
   global.WebSocket = require('react-native-websocket');
+}
+
+// Enable Pusher logging in development
+if (__DEV__) {
+  Pusher.logToConsole = true;
 }
 
 const PUSHER_APP_KEY = '17ab68f89fd4b710e004';
@@ -57,7 +65,7 @@ const SupportIcon = () => (
 const TaxiIcon = () => (
   <Svg width="18" height="18" viewBox="0 0 24 24" fill="none">
     <Path d="M5 18H3C2.44772 18 2 17.5523 2 17V14C2 13.4477 2.44772 13 3 13H5" stroke="#000000" strokeWidth="1.5"/>
-    <Path d="M19 18H21C21.5523 18 22 17.5523 22 17V14C22 13.4477 21.5523 13 21 13H19" stroke="#000000" strokeWidth="1.5"/>
+    <Path d="M19 18H21C21.5527 18 22 17.5523 22 17V14C22 13.4477 21.5527 13 21 13H19" stroke="#000000" strokeWidth="1.5"/>
     <Path d="M7 18H17" stroke="#000000" strokeWidth="1.5"/>
     <Circle cx="7.5" cy="15.5" r="2.5" fill="#F5A623" stroke="#000000" strokeWidth="1"/>
     <Circle cx="16.5" cy="15.5" r="2.5" fill="#F5A623" stroke="#000000" strokeWidth="1"/>
@@ -74,7 +82,7 @@ const CloseIcon = () => (
 
 const TicketIcon = () => (
   <Svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-    <Path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="#F5A623" strokeWidth="1.5"/>
+    <Path d="M4 4H20C21.1 22 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="#F5A623" strokeWidth="1.5"/>
     <Path d="M8 8H16" stroke="#F5A623" strokeWidth="1.5" strokeLinecap="round"/>
     <Path d="M8 12H14" stroke="#F5A623" strokeWidth="1.5" strokeLinecap="round"/>
     <Path d="M8 16H12" stroke="#F5A623" strokeWidth="1.5" strokeLinecap="round"/>
@@ -123,9 +131,8 @@ const ChatScreen = () => {
 
   // Keyboard listeners
   useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (e) => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
       setKeyboardVisible(true);
-      // Scroll to end when keyboard opens
       setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 100);
     });
     const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
@@ -148,104 +155,154 @@ const ChatScreen = () => {
       }
       return null;
     } catch (error) {
-      console.log(error);
+      console.log('Error getting user ID:', error);
       return null;
     }
   };
 
-  // Initialize Pusher
-  const initializePusher = async (ticketId, currentUserId) => {
-    if (!ticketId || !currentUserId) return;
+  // Initialize Pusher - CORRECTED VERSION
 
-    try {
-      if (pusherRef.current) {
-        try { pusherRef.current.disconnect(); } catch(e) {}
+const initializePusher = async (ticketId, currentUserId) => {
+  if (!ticketId || !currentUserId) {
+    console.log('❌ Cannot initialize Pusher: Missing ticketId or userId');
+    return;
+  }
+
+  try {
+    // Clean up existing connection
+    if (pusherRef.current) {
+      try { 
+        pusherRef.current.disconnect(); 
+      } catch(e) {
+        console.log('Pusher disconnect error:', e);
       }
-
-      pusherRef.current = new Pusher(PUSHER_APP_KEY, {
-        cluster: PUSHER_CLUSTER,
-        forceTLS: true,
-        enabledTransports: ['ws', 'wss'],
-      });
-
-      pusherRef.current.connection.bind('connected', () => {
-        console.log('✅ Pusher connected');
-        setPusherStatus('connected');
-      });
-
-      pusherRef.current.connection.bind('disconnected', () => {
-        console.log('❌ Pusher disconnected');
-        setPusherStatus('disconnected');
-      });
-
-      const channelName = `ticket.${ticketId}`;
-      channelRef.current = pusherRef.current.subscribe(channelName);
-      
-      channelRef.current.bind('pusher:subscription_succeeded', () => {
-        console.log('✅ Subscribed to channel:', channelName);
-      });
-
-      // Listen for new messages from agent
-      channelRef.current.bind('new-message', async (data) => {
-        try {
-          const userData = await AsyncStorage.getItem('userData');
-          let localUserId = null;
-          if (userData) {
-            const user = JSON.parse(userData);
-            localUserId = user.id;
-          }
-
-          if (localUserId && String(data.sender_id) === String(localUserId)) {
-            return;
-          }
-
-          const senderName = agentName ;
-          
-          if (data.sender_id && !isAgentAssigned) {
-            await fetchTicketInfo(ticketId);
-          }
-
-          const newMessage = {
-            id: data.id?.toString() || Date.now().toString(),
-            text: data.message,
-            sender: 'admin',
-            senderName: senderName,
-            time: new Date(data.created_at || Date.now()).toLocaleTimeString([], { 
-              hour: '2-digit', 
-              minute: '2-digit' 
-            }),
-          };
-
-          setMessages(prev => {
-            if (prev.some(msg => msg.id === newMessage.id)) return prev;
-            return [...prev, newMessage];
-          });
-          
-          setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 100);
-        } catch (err) {
-          console.log('Error processing message:', err);
-        }
-      });
-
-      // Listen for agent assigned event
-      channelRef.current.bind('new-message', (data) => {
-        console.log('🎉 Agent assigned:', data);
-        if (data.sender_id) {
-          setAgentName(data.sender_id);
-          setIsAgentAssigned(true);
-          appendMessage(`✨ An Agent has been assigned to your ticket.`, 'system');
-        }
-      });
-
-    } catch (error) {
-      console.log('Pusher error:', error);
+      pusherRef.current = null;
     }
-  };
 
-  // Fetch ticket info to check agent assignment
+    if (channelRef.current) {
+      try {
+        channelRef.current.unsubscribe();
+      } catch(e) {
+        console.log('Channel unsubscribe error:', e);
+      }
+      channelRef.current = null;
+    }
+
+    console.log('🔌 Initializing Pusher...');
+
+    // Create Pusher instance - SIMPLIFIED
+    const pusher = new Pusher(PUSHER_APP_KEY, {
+      cluster: PUSHER_CLUSTER,
+      forceTLS: true,
+      // Minimal configuration for React Native
+    });
+
+    pusherRef.current = pusher;
+
+    // Connection event handlers
+    pusher.connection.bind('connected', () => {
+      console.log('✅ Pusher connected successfully');
+      setPusherStatus('connected');
+    });
+
+    pusher.connection.bind('disconnected', () => {
+      console.log('❌ Pusher disconnected');
+      setPusherStatus('disconnected');
+    });
+
+    pusher.connection.bind('error', (err) => {
+      console.log('❌ Pusher connection error:', err);
+      setPusherStatus('error');
+    });
+
+    pusher.connection.bind('connecting', () => {
+      console.log('🔄 Pusher connecting...');
+      setPusherStatus('connecting');
+    });
+
+    // Subscribe to channel
+    const channelName = `ticket.${ticketId}`;
+    console.log('📡 Subscribing to channel:', channelName);
+    
+    channelRef.current = pusher.subscribe(channelName);
+    
+    channelRef.current.bind('pusher:subscription_succeeded', () => {
+      console.log('✅ Successfully subscribed to channel:', channelName);
+      setPusherStatus('connected');
+    });
+
+    channelRef.current.bind('pusher:subscription_error', (err) => {
+      console.log('❌ Subscription error:', err);
+      setPusherStatus('error');
+    });
+
+    // Listen for new messages from agent
+    channelRef.current.bind('new-message', async (data) => {
+      console.log('📨 New message received:', data);
+      try {
+        const userData = await AsyncStorage.getItem('userData');
+        let localUserId = null;
+        if (userData) {
+          const user = JSON.parse(userData);
+          localUserId = user.id;
+        }
+
+        // Skip own messages
+        if (localUserId && String(data.sender_id) === String(localUserId)) {
+          console.log('⏭️ Skipping own message');
+          return;
+        }
+
+        // Check if agent is assigned
+        if (data.sender_id && !isAgentAssigned) {
+          await fetchTicketInfo(ticketId);
+        }
+
+        const senderName = data.sender?.name || agentName || 'Support Agent';
+        
+        const newMessage = {
+          id: data.id?.toString() || Date.now().toString(),
+          text: data.message || '',
+          sender: 'admin',
+          senderName: senderName,
+          time: new Date(data.created_at || Date.now()).toLocaleTimeString([], { 
+            hour: '2-digit', 
+            minute: '2-digit' 
+          }),
+        };
+
+        setMessages(prev => {
+          if (prev.some(msg => msg.id === newMessage.id)) return prev;
+          return [...prev, newMessage];
+        });
+        
+        setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 100);
+      } catch (err) {
+        console.log('Error processing message:', err);
+      }
+    });
+
+    // Listen for agent assignment
+    channelRef.current.bind('agent-assigned', (data) => {
+      console.log('👤 Agent assigned:', data);
+      if (data.agent_id) {
+        setAgentName(data.agent_name || 'Agent');
+        setIsAgentAssigned(true);
+        appendMessage(`✨ ${data.agent_name || 'An Agent'} has been assigned to your ticket.`, 'system');
+      }
+    });
+
+    console.log('✅ Pusher initialization complete');
+
+  } catch (error) {
+    console.log('❌ Pusher initialization error:', error);
+    setPusherStatus('error');
+  }
+};
+  // Fetch ticket info
   const fetchTicketInfo = async (ticketId) => {
     try {
-      const response = await apiClient.get(`/tickets/${ticketId}/messages`);
+      const response = await apiClient.get(`/tickets/${ticketId}`);
       if (response.data?.ticket) {
         const ticketData = response.data.ticket;
         if (ticketData.agent_id && ticketData.agent_id !== null) {
@@ -266,7 +323,7 @@ const ChatScreen = () => {
     try {
       const formData = new FormData();
       formData.append('booking_id', bookingId);
-      formData.append('subject', issueText);
+      formData.append('subject', issueText.substring(0, 100));
       formData.append('message', issueText);
       
       const response = await apiClient.post('/tickets', formData, {
@@ -379,7 +436,7 @@ const ChatScreen = () => {
       return;
     }
     
-    const messageText = inputText;
+    const messageText = inputText.trim();
     setInputText('');
     
     const tempId = Date.now().toString();
@@ -404,29 +461,30 @@ const ChatScreen = () => {
       });
       
       console.log('Send message response:', response.data);
+      
+      setMessages(prev => prev.filter(msg => msg.id !== tempId));
       await fetchTicketMessages(currentTicketId);
+      
     } catch (error) {
       console.log('Send message error:', error.response?.data);
       
-      // Remove the temporary message
       setMessages(prev => prev.filter(msg => msg.id !== tempId));
       
-      // Check for ticket closed error
       if (error.response?.data?.error === 'This ticket has been marked as closed. Conversation is closed.') {
-       setIsAgentAssigned(false);
+        setIsAgentAssigned(false);
         const errorMessage = {
           id: Date.now().toString(),
-          text: 'Cannot send message: This ticket has been closed. Conversation is closed.',
+          text: 'This ticket has been closed. Please create a new ticket for further assistance.',
           sender: 'system',
           senderName: 'System',
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           isError: true,
         };
         setMessages(prev => [...prev, errorMessage]);
-        
+        setCurrentTicketId(null);
+        setSelectedRide(null);
+        setSelectedBookingId(null);
       } else {
-        // Show other errors as message in chat
-        setIsAgentAssigned(false);
         const errorMessage = {
           id: Date.now().toString(),
           text: `Failed to send message: ${error.response?.data?.error || 'Unknown error'}`,
@@ -472,6 +530,7 @@ const ChatScreen = () => {
         setShowQuickIssues(true);
       }
     } catch (error) {
+      console.log('Fetch common issues error:', error);
       const defaultIssues = [
         { id: '1', question: "Driver asked for extra cash", answer: "We will investigate this matter." },
         { id: '2', question: "Wrong route / Detour taken", answer: "We will review the trip route." },
@@ -554,8 +613,11 @@ const ChatScreen = () => {
     setShowOtherIssueInput(false);
     appendMessage(otherIssueText, 'user');
     
+    const issueText = otherIssueText;
+    setOtherIssueText('');
+    
     setTimeout(async () => {
-      const ticket = await createOrGetTicket(selectedBookingId, otherIssueText);
+      const ticket = await createOrGetTicket(selectedBookingId, issueText);
       
       if (ticket && ticket.id) {
         setCurrentTicketId(ticket.id);
@@ -568,7 +630,6 @@ const ChatScreen = () => {
         } else {
           appendMessage("Thank you for sharing. We have created a support ticket. Our team will investigate and update you within 24 hours.", 'system');
         }
-        setOtherIssueText('');
       } else {
         appendMessage("We're having trouble submitting your issue. Please try again.", 'system');
       }
@@ -600,7 +661,7 @@ const ChatScreen = () => {
         await fetchTicketMessages(initialTicketId);
         await initializePusher(initialTicketId, currentUserId);
       } else {
-        fetchUserBookings();
+        await fetchUserBookings();
         setInitialLoading(false);
       }
     };
@@ -612,15 +673,23 @@ const ChatScreen = () => {
       const booking = bookings.find(b => b.id === parseInt(initialBookingId));
       if (booking) handleSelectTrip(booking);
     }
-  }, [initialBookingId, bookings]);
+  }, [initialBookingId, bookings, selectedRide, initialTicketId]);
 
   useEffect(() => {
     return () => {
       if (channelRef.current) {
-        try { channelRef.current.unsubscribe(); } catch(e) {}
+        try { 
+          channelRef.current.unsubscribe(); 
+        } catch(e) {
+          console.log('Unsubscribe error:', e);
+        }
       }
       if (pusherRef.current) {
-        try { pusherRef.current.disconnect(); } catch(e) {}
+        try { 
+          pusherRef.current.disconnect(); 
+        } catch(e) {
+          console.log('Disconnect error:', e);
+        }
       }
     };
   }, []);
@@ -660,7 +729,7 @@ const ChatScreen = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container} >
+    <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#1C1C1E" />
       
       <View style={styles.chatHeader}>
@@ -690,7 +759,8 @@ const ChatScreen = () => {
             </>
           ) : (
             <>
-              
+              <View style={styles.statusDotWaiting} />
+              <Text style={styles.waitingText}>Waiting for agent assignment...</Text>
             </>
           )}
         </View>
@@ -702,7 +772,9 @@ const ChatScreen = () => {
           <View style={[styles.statusDot, { 
             backgroundColor: pusherStatus === 'connected' ? '#34C759' : '#F5A623' 
           }]} />
-          <Text style={styles.statusText}>
+          <Text style={[styles.statusText, { 
+            color: pusherStatus === 'connected' ? '#34C759' : '#F5A623' 
+          }]}>
             {pusherStatus === 'connected' ? '● Connected' : '○ Connecting...'}
           </Text>
           <View style={styles.ticketInfo}>
@@ -850,7 +922,7 @@ const ChatScreen = () => {
           </View>
         )}
 
-        {/* Message Input - Fixed Keyboard Handling */}
+        {/* Message Input */}
         {currentTicketId && (
           <View style={[
             styles.inputContainer,
@@ -1026,7 +1098,6 @@ const styles = StyleSheet.create({
     marginRight: 8 
   },
   statusText: { 
-    color: '#34C759', 
     fontSize: 11, 
     fontWeight: '500', 
     flex: 1 
@@ -1092,7 +1163,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: '#2C2C2E',
   },
-  
+
   
   messageBubble: {
     maxWidth: '75%',
@@ -1245,9 +1316,6 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: '#2C2C2E',
     maxHeight: 90,
-  },
-  inputDisabled: {
-    opacity: 0.6,
   },
   sendBtn: { 
     width: 40, 

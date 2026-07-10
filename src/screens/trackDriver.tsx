@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, onValue, off, get } from 'firebase/database';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   StyleSheet,
   Text,
@@ -13,12 +13,14 @@ import {
   Alert,
   ScrollView,
   Platform,
+  AppState,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
+import { WebView } from 'react-native-webview';
 import Svg, { Path } from 'react-native-svg';
 import apiClient from '../services/apiConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
 
@@ -61,13 +63,13 @@ const RefreshIcon = () => (
 
 // Firebase Configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyD1EBYCLxKYmEU4aKgjiP_CGRqwFl4i33g",
-  authDomain: "driverapp-21839.firebaseapp.com",
-  projectId: "driverapp-21839",
-  databaseURL: "https://driverapp-21839-default-rtdb.firebaseio.com/",
-  storageBucket: "driverapp-21839.firebasestorage.app",
-  messagingSenderId: "412454711745",
-  appId: "1:412454711745:web:4378996f5dc2d14b0d3f40"
+  apiKey: "AIzaSyDo3PzZFL_3YCs0Fl_WUTJ8j4Lw6dx0XSQ",
+  authDomain: "driverapp-4cb59.firebaseapp.com",
+  projectId: "driverapp-4cb59",
+  storageBucket: "driverapp-4cb59.firebasestorage.app",
+  databaseURL: "https://driverapp-4cb59-default-rtdb.firebaseio.com",
+  messagingSenderId: "294874049573",
+  appId: "1:294874049573:web:a88f375fb35ad1f7c863cc"
 };
 
 // Initialize Firebase
@@ -96,6 +98,7 @@ interface BookingData {
   to_location: string;
   status: string;
   total_fee: string;
+  distance?: string;
   driver?: {
     id: string;
     name: string;
@@ -112,13 +115,588 @@ interface BookingData {
 
 type RideStage = 'driver_to_pickup' | 'pickup_to_drop' | 'completed';
 
+// ==================== ENHANCED HTML TEMPLATE WITH POLYLINES ====================
+const getMapHTML = (apiKey: string) => `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+    html, body, #map {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #1C1C1E;
+    }
+    #map {
+      height: 100%;
+      width: 100%;
+    }
+    .gm-style .gm-style-iw-c {
+      background-color: #1C1C1E !important;
+      color: #FFFFFF !important;
+    }
+    .gm-style .gm-style-iw-t::after {
+      background: #1C1C1E !important;
+    }
+    .gm-style .gm-style-iw-d {
+      color: #FFFFFF !important;
+    }
+    .route-info {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.8);
+      color: #FFFFFF;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      border: 1px solid #F5A623;
+      z-index: 1000;
+      display: none;
+    }
+    .route-info.visible {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div id="routeInfo" class="route-info">
+    <span id="routeDistance">0</span> km • <span id="routeDuration">0</span> min
+  </div>
+  <script>
+    let map;
+    let markers = {};
+    let polylines = {};
+    let routeCoords = [];
+    let mapInitialized = false;
+    let isMapReady = false;
+    let isManuallyInteracting = false;
+    let routeInfoVisible = false;
+    
+    // Function to initialize map
+    function initMap() {
+      try {
+        const defaultCenter = { lat: 37.7749, lng: -122.4194 };
+        
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: defaultCenter,
+          zoom: 15,
+          mapTypeControl: false,
+          fullscreenControl: false,
+          streetViewControl: false,
+          zoomControl: true,
+          zoomControlOptions: {
+            position: google.maps.ControlPosition.RIGHT_BOTTOM
+          },
+          styles: [
+            {
+              "featureType": "all",
+              "elementType": "labels.text.fill",
+              "stylers": [{ "color": "#FFFFFF" }]
+            },
+            {
+              "featureType": "all",
+              "elementType": "labels.text.stroke",
+              "stylers": [{ "color": "#000000" }]
+            },
+            {
+              "featureType": "road",
+              "elementType": "geometry",
+              "stylers": [{ "color": "#2C2C2E" }]
+            },
+            {
+              "featureType": "road.arterial",
+              "elementType": "geometry",
+              "stylers": [{ "color": "#3A3A3C" }]
+            },
+            {
+              "featureType": "road.highway",
+              "elementType": "geometry",
+              "stylers": [{ "color": "#4A4A4C" }]
+            },
+            {
+              "featureType": "water",
+              "elementType": "geometry",
+              "stylers": [{ "color": "#1A1A1E" }]
+            },
+            {
+              "featureType": "landscape",
+              "elementType": "geometry",
+              "stylers": [{ "color": "#121214" }]
+            },
+            {
+              "featureType": "poi",
+              "elementType": "geometry",
+              "stylers": [{ "color": "#1C1C1E" }]
+            },
+            {
+              "featureType": "transit",
+              "elementType": "geometry",
+              "stylers": [{ "color": "#1C1C1E" }]
+            },
+            {
+              "featureType": "administrative",
+              "elementType": "geometry",
+              "stylers": [{ "color": "#2C2C2E" }]
+            }
+          ]
+        });
+        
+        // Add interaction listeners
+        google.maps.event.addListener(map, 'dragstart', function() {
+          isManuallyInteracting = true;
+          if (window.ReactNativeWebView) {
+            window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'MAP_DRAG_START' }));
+          }
+        });
+        
+        google.maps.event.addListener(map, 'dragend', function() {
+          setTimeout(function() {
+            isManuallyInteracting = false;
+            if (window.ReactNativeWebView) {
+              window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'MAP_DRAG_END' }));
+            }
+          }, 3000);
+        });
+        
+        mapInitialized = true;
+        isMapReady = true;
+        
+        if (window.ReactNativeWebView) {
+          window.ReactNativeWebView.postMessage(JSON.stringify({ 
+            type: 'MAP_READY',
+            status: 'success'
+          }));
+        }
+        
+        console.log('✅ Map initialized successfully');
+      } catch (error) {
+        console.error('❌ Map initialization error:', error);
+        if (window.ReactNativeWebView) {
+          window.ReactNativeWebView.postMessage(JSON.stringify({ 
+            type: 'MAP_ERROR',
+            error: error.message
+          }));
+        }
+      }
+    }
+    
+    // Function to create or update driver marker
+    function updateDriverLocation(lat, lng, heading) {
+      if (!isMapReady || !map) {
+        console.warn('Map not ready for driver update');
+        return;
+      }
+      
+      try {
+        if (!markers.driver) {
+          markers.driver = new google.maps.Marker({
+            position: { lat: lat, lng: lng },
+            map: map,
+            icon: {
+              path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+              scale: 10,
+              fillColor: '#F5A623',
+              fillOpacity: 1,
+              strokeColor: '#FFFFFF',
+              strokeWeight: 2,
+              rotation: heading || 0
+            },
+            title: 'Driver',
+            zIndex: 1000
+          });
+        } else {
+          markers.driver.setPosition({ lat: lat, lng: lng });
+          if (heading !== undefined) {
+            markers.driver.setIcon({
+              path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+              scale: 10,
+              fillColor: '#F5A623',
+              fillOpacity: 1,
+              strokeColor: '#FFFFFF',
+              strokeWeight: 2,
+              rotation: heading
+            });
+          }
+        }
+        
+        if (!isManuallyInteracting) {
+          map.panTo({ lat: lat, lng: lng });
+        }
+        
+        console.log('📍 Driver location updated:', lat, lng);
+      } catch (error) {
+        console.error('Error updating driver location:', error);
+      }
+    }
+    
+    // Function to create or update pickup marker
+    function updatePickupLocation(lat, lng) {
+      if (!isMapReady || !map) return;
+      
+      try {
+        if (!markers.pickup) {
+          markers.pickup = new google.maps.Marker({
+            position: { lat: lat, lng: lng },
+            map: map,
+            icon: {
+              path: google.maps.SymbolPath.CIRCLE,
+              scale: 12,
+              fillColor: '#34C759',
+              fillOpacity: 1,
+              strokeColor: '#FFFFFF',
+              strokeWeight: 3
+            },
+            label: {
+              text: 'P',
+              color: '#FFFFFF',
+              fontSize: '14px',
+              fontWeight: 'bold'
+            },
+            title: 'Pickup Location',
+            zIndex: 500
+          });
+        } else {
+          markers.pickup.setPosition({ lat: lat, lng: lng });
+        }
+        console.log('📍 Pickup location updated:', lat, lng);
+      } catch (error) {
+        console.error('Error updating pickup location:', error);
+      }
+    }
+    
+    // Function to create or update drop marker
+    function updateDropLocation(lat, lng) {
+      if (!isMapReady || !map) return;
+      
+      try {
+        if (!markers.drop) {
+          markers.drop = new google.maps.Marker({
+            position: { lat: lat, lng: lng },
+            map: map,
+            icon: {
+              path: google.maps.SymbolPath.CIRCLE,
+              scale: 12,
+              fillColor: '#FF3B30',
+              fillOpacity: 1,
+              strokeColor: '#FFFFFF',
+              strokeWeight: 3
+            },
+            label: {
+              text: 'D',
+              color: '#FFFFFF',
+              fontSize: '14px',
+              fontWeight: 'bold'
+            },
+            title: 'Drop Location',
+            zIndex: 500
+          });
+        } else {
+          markers.drop.setPosition({ lat: lat, lng: lng });
+        }
+        console.log('📍 Drop location updated:', lat, lng);
+      } catch (error) {
+        console.error('Error updating drop location:', error);
+      }
+    }
+    
+    // ============= ENHANCED POLYLINE FUNCTIONS =============
+    
+    // Function to draw multiple polylines with different styles
+    function drawPolylines(coordinates, options) {
+      if (!isMapReady || !map || !coordinates || coordinates.length < 2) {
+        console.warn('Cannot draw polyline: insufficient data');
+        return null;
+      }
+      
+      try {
+        const path = coordinates.map(coord => ({ 
+          lat: coord.lat, 
+          lng: coord.lng 
+        }));
+        
+        // Create polyline with enhanced options
+        const polyline = new google.maps.Polyline({
+          path: path,
+          geodesic: true,
+          strokeColor: options.color || '#F5A623',
+          strokeOpacity: options.opacity || 1.0,
+          strokeWeight: options.weight || 5,
+          strokeDasharray: options.dashArray || '',
+          zIndex: options.zIndex || 100,
+          clickable: options.clickable || false,
+          editable: false,
+          visible: true
+        });
+        
+        polyline.setMap(map);
+        
+        // Add click listener for info
+        if (options.showInfo) {
+          google.maps.event.addListener(polyline, 'click', function() {
+            const distance = options.distance || '0';
+            const duration = options.duration || '0';
+            showRouteInfo(distance, duration);
+          });
+        }
+        
+        console.log('🛣️ Polyline drawn:', coordinates.length, 'points');
+        return polyline;
+      } catch (error) {
+        console.error('Error drawing polyline:', error);
+        return null;
+      }
+    }
+    
+    // Function to update route with multiple polylines
+    function updateRoute(coordinates, isActive = false, routeData = null) {
+      if (!isMapReady || !map) return;
+      
+      try {
+        // Clear existing polylines
+        clearPolylines();
+        
+        if (!coordinates || coordinates.length < 2) {
+          console.log('No route coordinates to draw');
+          return;
+        }
+        
+        // Draw main route polyline
+        const mainOptions = {
+          color: isActive ? '#34C759' : '#F5A623',
+          opacity: 1.0,
+          weight: 5,
+          dashArray: isActive ? '' : '',
+          zIndex: 100,
+          showInfo: true,
+          distance: routeData?.distance || '0',
+          duration: routeData?.duration || '0'
+        };
+        
+        const mainPolyline = drawPolylines(coordinates, mainOptions);
+        if (mainPolyline) {
+          polylines.main = mainPolyline;
+        }
+        
+        // If active trip, draw a glowing effect polyline underneath
+        if (isActive) {
+          const glowOptions = {
+            color: '#34C759',
+            opacity: 0.3,
+            weight: 12,
+            dashArray: '',
+            zIndex: 99,
+            showInfo: false
+          };
+          const glowPolyline = drawPolylines(coordinates, glowOptions);
+          if (glowPolyline) {
+            polylines.glow = glowPolyline;
+          }
+        }
+        
+        // Show route info
+        if (routeData?.distance && routeData?.duration) {
+          showRouteInfo(routeData.distance, routeData.duration);
+        }
+        
+        console.log('✅ Route updated with polylines');
+      } catch (error) {
+        console.error('Error updating route:', error);
+      }
+    }
+    
+    // Function to clear all polylines
+    function clearPolylines() {
+      Object.keys(polylines).forEach(key => {
+        if (polylines[key]) {
+          polylines[key].setMap(null);
+          delete polylines[key];
+        }
+      });
+      hideRouteInfo();
+      console.log('🗑️ Polylines cleared');
+    }
+    
+    // Function to show route info
+    function showRouteInfo(distance, duration) {
+      const infoEl = document.getElementById('routeInfo');
+      const distEl = document.getElementById('routeDistance');
+      const durEl = document.getElementById('routeDuration');
+      
+      if (infoEl && distEl && durEl) {
+        distEl.textContent = distance;
+        durEl.textContent = duration;
+        infoEl.classList.add('visible');
+        routeInfoVisible = true;
+      }
+    }
+    
+    function hideRouteInfo() {
+      const infoEl = document.getElementById('routeInfo');
+      if (infoEl) {
+        infoEl.classList.remove('visible');
+        routeInfoVisible = false;
+      }
+    }
+    
+    // Function to draw route with traffic or alternative routes
+    function drawAlternativeRoutes(coordinates, color = '#FF6B6B') {
+      if (!isMapReady || !map || !coordinates || coordinates.length < 2) return;
+      
+      try {
+        const altOptions = {
+          color: color,
+          opacity: 0.7,
+          weight: 3,
+          dashArray: '5, 10',
+          zIndex: 80,
+          showInfo: false
+        };
+        const altPolyline = drawPolylines(coordinates, altOptions);
+        if (altPolyline) {
+          polylines.alternative = altPolyline;
+        }
+      } catch (error) {
+        console.error('Error drawing alternative route:', error);
+      }
+    }
+    
+    // Function to center on driver
+    function centerOnDriver() {
+      if (!isMapReady || !map || !markers.driver) return;
+      
+      try {
+        const pos = markers.driver.getPosition();
+        map.panTo(pos);
+        isManuallyInteracting = false;
+        console.log('🎯 Centered on driver');
+      } catch (error) {
+        console.error('Error centering on driver:', error);
+      }
+    }
+    
+    // Function to fit bounds with all markers and route
+    function fitMapBounds(coordinates) {
+      if (!isMapReady || !map) return;
+      
+      try {
+        const bounds = new google.maps.LatLngBounds();
+        
+        // Add all coordinates to bounds
+        if (coordinates && coordinates.length > 0) {
+          coordinates.forEach(coord => {
+            bounds.extend({ lat: coord.lat, lng: coord.lng });
+          });
+        }
+        
+        // Add markers if they exist
+        if (markers.driver) {
+          bounds.extend(markers.driver.getPosition());
+        }
+        if (markers.pickup) {
+          bounds.extend(markers.pickup.getPosition());
+        }
+        if (markers.drop) {
+          bounds.extend(markers.drop.getPosition());
+        }
+        
+        map.fitBounds(bounds);
+        console.log('📐 Map bounds updated with all points');
+      } catch (error) {
+        console.error('Error fitting bounds:', error);
+      }
+    }
+    
+    // Listen for messages from React Native
+    document.addEventListener('message', function(event) {
+      try {
+        const data = JSON.parse(event.data);
+        console.log('📨 Received message:', data.type);
+        
+        switch(data.type) {
+          case 'UPDATE_DRIVER':
+            updateDriverLocation(data.lat, data.lng, data.heading);
+            break;
+          case 'UPDATE_PICKUP':
+            updatePickupLocation(data.lat, data.lng);
+            break;
+          case 'UPDATE_DROP':
+            updateDropLocation(data.lat, data.lng);
+            break;
+          case 'UPDATE_ROUTE':
+            updateRoute(data.coordinates, data.isActive || false, data.routeData || null);
+            break;
+          case 'CLEAR_ROUTE':
+            clearPolylines();
+            break;
+          case 'SET_INTERACTION':
+            isManuallyInteracting = data.interacting;
+            break;
+          case 'CENTER_ON_DRIVER':
+            centerOnDriver();
+            break;
+          case 'FIT_BOUNDS':
+            fitMapBounds(data.coordinates);
+            break;
+          case 'DRAW_ALTERNATIVE_ROUTE':
+            drawAlternativeRoutes(data.coordinates, data.color);
+            break;
+          default:
+            console.log('Unknown message type:', data.type);
+        }
+      } catch (error) {
+        console.error('Error processing message:', error);
+      }
+    });
+    
+    // Handle Google Maps auth failure
+    window.gm_authFailure = function() {
+      console.error('❌ Google Maps authentication failed');
+      if (window.ReactNativeWebView) {
+        window.ReactNativeWebView.postMessage(JSON.stringify({ 
+          type: 'MAP_ERROR',
+          error: 'Authentication failed'
+        }));
+      }
+    };
+    
+    // Initialize map when script loads
+    if (typeof google !== 'undefined' && google.maps) {
+      console.log('🌐 Google Maps loaded, initializing...');
+      initMap();
+    } else {
+      console.log('⏳ Waiting for Google Maps to load...');
+      setTimeout(function() {
+        if (typeof google !== 'undefined' && google.maps) {
+          initMap();
+        } else {
+          console.error('❌ Google Maps failed to load');
+          if (window.ReactNativeWebView) {
+            window.ReactNativeWebView.postMessage(JSON.stringify({ 
+              type: 'MAP_ERROR',
+              error: 'Google Maps failed to load'
+            }));
+          }
+        }
+      }, 3000);
+    }
+    
+    console.log('📱 WebView HTML loaded');
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=${apiKey}&v=3.exp&libraries=geometry,places"></script>
+</body>
+</html>
+`;
+
 const TrackRideScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const insets = useSafeAreaInsets();
 
-  const bookingId = route.params?.bookingId || route.params?.id || '5';
-  
+  const bookingId = route.params?.tripId;
   const [loading, setLoading] = useState(true);
   const [booking, setBooking] = useState<BookingData | null>(null);
   const [cancelling, setCancelling] = useState(false);
@@ -140,21 +718,312 @@ const TrackRideScreen = () => {
   const [rideStage, setRideStage] = useState<RideStage>('driver_to_pickup');
   const [hasDriverArrived, setHasDriverArrived] = useState(false);
   const [isMapReady, setIsMapReady] = useState(false);
+  const [forceRenderKey, setForceRenderKey] = useState(0);
+  const [isDataRestored, setIsDataRestored] = useState(false);
+  const [mapError, setMapError] = useState<string | null>(null);
+  const [routeInfo, setRouteInfo] = useState<{distance: string, duration: string} | null>(null);
   
-  const mapRef = useRef<MapView>(null);
+  const webViewRef = useRef<WebView>(null);
   const driverLocationListenerRef = useRef<any>(null);
-  const animationFrameRef = useRef<any>(null);
   const lastDriverLocationRef = useRef<DriverLocation | null>(null);
+  const routeCoordsRef = useRef<Coordinate[]>([]);
+  const pickupCoordRef = useRef<Coordinate | null>(null);
+  const dropCoordRef = useRef<Coordinate | null>(null);
+  const driverCoordRef = useRef<Coordinate | null>(null);
+  const rideStageRef = useRef<RideStage>('driver_to_pickup');
+  const bookingRef = useRef<BookingData | null>(null);
   let manualInteractionTimeout: NodeJS.Timeout;
 
-  // Fetch booking details
+  // Keep refs updated
   useEffect(() => {
-    fetchBookingDetails();
-  }, [bookingId]);
+    pickupCoordRef.current = pickupCoord;
+    dropCoordRef.current = dropCoord;
+    driverCoordRef.current = driverCoord;
+    rideStageRef.current = rideStage;
+    bookingRef.current = booking;
+  }, [pickupCoord, dropCoord, driverCoord, rideStage, booking]);
+
+  // ==================== WEBVIEW COMMUNICATION ====================
+  
+  const sendToWebView = (data: any) => {
+    if (webViewRef.current && isMapReady) {
+      webViewRef.current.postMessage(JSON.stringify(data));
+    }
+  };
+
+  const updateMapDriverLocation = (lat: number, lng: number, heading?: number) => {
+    sendToWebView({
+      type: 'UPDATE_DRIVER',
+      lat,
+      lng,
+      heading: heading || 0
+    });
+  };
+
+  const updateMapPickupLocation = (lat: number, lng: number) => {
+    sendToWebView({
+      type: 'UPDATE_PICKUP',
+      lat,
+      lng
+    });
+  };
+
+  const updateMapDropLocation = (lat: number, lng: number) => {
+    sendToWebView({
+      type: 'UPDATE_DROP',
+      lat,
+      lng
+    });
+  };
+
+  const updateMapRoute = (coordinates: Coordinate[], isActive: boolean = false, routeData?: {distance: string, duration: string}) => {
+    const coords = coordinates.map(c => ({ lat: c.latitude, lng: c.longitude }));
+    sendToWebView({
+      type: 'UPDATE_ROUTE',
+      coordinates: coords,
+      isActive,
+      routeData: routeData || null
+    });
+  };
+
+  const clearMapRoute = () => {
+    sendToWebView({
+      type: 'CLEAR_ROUTE'
+    });
+  };
+
+  const centerMapOnDriver = () => {
+    if (driverCoord && webViewRef.current) {
+      sendToWebView({
+        type: 'CENTER_ON_DRIVER'
+      });
+      setIsManuallyInteracting(false);
+    }
+  };
+
+  const fitMapBounds = (coordinates: Coordinate[]) => {
+    const coords = coordinates.map(c => ({ lat: c.latitude, lng: c.longitude }));
+    sendToWebView({
+      type: 'FIT_BOUNDS',
+      coordinates: coords
+    });
+  };
+
+  const drawAlternativeRoute = (coordinates: Coordinate[], color?: string) => {
+    const coords = coordinates.map(c => ({ lat: c.latitude, lng: c.longitude }));
+    sendToWebView({
+      type: 'DRAW_ALTERNATIVE_ROUTE',
+      coordinates: coords,
+      color: color || '#FF6B6B'
+    });
+  };
+
+  const handleWebViewMessage = (event: any) => {
+    try {
+      const data = JSON.parse(event.nativeEvent.data);
+      console.log('Received from WebView:', data);
+      
+      switch(data.type) {
+        case 'MAP_READY':
+          setIsMapReady(true);
+          setMapError(null);
+          console.log('✅ Map is ready');
+          // Send initial data to map
+          if (driverCoord) {
+            updateMapDriverLocation(driverCoord.latitude, driverCoord.longitude, driverBearing);
+          }
+          if (pickupCoord) {
+            updateMapPickupLocation(pickupCoord.latitude, pickupCoord.longitude);
+          }
+          if (dropCoord) {
+            updateMapDropLocation(dropCoord.latitude, dropCoord.longitude);
+          }
+          if (routeCoords.length > 0) {
+            const routeData = {
+              distance: routeDistance.toFixed(1),
+              duration: routeDuration.toString()
+            };
+            updateMapRoute(routeCoords, rideStage === 'pickup_to_drop', routeData);
+          }
+          break;
+        case 'MAP_ERROR':
+          console.error('Map error from WebView:', data.error);
+          setMapError(data.error || 'Map failed to load');
+          setTimeout(() => {
+            setForceRenderKey(prev => prev + 1);
+          }, 5000);
+          break;
+        case 'MAP_DRAG_START':
+          setIsManuallyInteracting(true);
+          break;
+        case 'MAP_DRAG_END':
+          setTimeout(() => {
+            setIsManuallyInteracting(false);
+          }, 3000);
+          break;
+        default:
+          console.log('Unknown message type from WebView:', data.type);
+      }
+    } catch (error) {
+      console.error('Error parsing WebView message:', error);
+    }
+  };
+
+  // ==================== PERSISTENCE FUNCTIONS ====================
+  
+  const persistBookingData = async () => {
+    if (booking && bookingId) {
+      try {
+        await AsyncStorage.setItem(`booking_${bookingId}`, JSON.stringify(booking));
+        console.log('💾 Persisted booking data');
+      } catch (error) {
+        console.error('Error persisting booking:', error);
+      }
+    }
+  };
+
+  const persistRouteData = async () => {
+    if (routeCoords.length > 0 && bookingId) {
+      try {
+        await AsyncStorage.setItem(`route_${bookingId}`, JSON.stringify(routeCoords));
+        routeCoordsRef.current = routeCoords;
+        console.log('💾 Saved route to storage:', routeCoords.length, 'points');
+      } catch (error) {
+        console.error('Error persisting route:', error);
+      }
+    }
+  };
+
+  const persistPickupDropCoords = async () => {
+    if (pickupCoord && dropCoord && bookingId) {
+      try {
+        await AsyncStorage.setItem(`coordinates_${bookingId}`, JSON.stringify({
+          pickup: pickupCoord,
+          drop: dropCoord
+        }));
+        console.log('💾 Persisted pickup/drop coordinates');
+      } catch (error) {
+        console.error('Error persisting coordinates:', error);
+      }
+    }
+  };
+
+  const loadPersistedData = async () => {
+    if (!bookingId) return;
+    
+    try {
+      console.log('🔄 Loading persisted data for booking:', bookingId);
+      
+      const savedBooking = await AsyncStorage.getItem(`booking_${bookingId}`);
+      if (savedBooking && !booking) {
+        const parsedBooking = JSON.parse(savedBooking);
+        setBooking(parsedBooking);
+        bookingRef.current = parsedBooking;
+        console.log('✅ Loaded persisted booking data');
+      }
+      
+      const savedRoute = await AsyncStorage.getItem(`route_${bookingId}`);
+      if (savedRoute && routeCoords.length === 0) {
+        const parsedRoute = JSON.parse(savedRoute);
+        if (parsedRoute.length > 0) {
+          setRouteCoords(parsedRoute);
+          routeCoordsRef.current = parsedRoute;
+          console.log('✅ Loaded persisted route data:', parsedRoute.length, 'points');
+        }
+      }
+      
+      const savedCoords = await AsyncStorage.getItem(`coordinates_${bookingId}`);
+      if (savedCoords && !pickupCoord) {
+        const { pickup, drop } = JSON.parse(savedCoords);
+        if (pickup) setPickupCoord(pickup);
+        if (drop) setDropCoord(drop);
+        console.log('✅ Loaded persisted coordinates');
+      }
+      
+      setIsDataRestored(true);
+    } catch (error) {
+      console.error('Error loading persisted data:', error);
+    }
+  };
+
+  // ==================== FOCUS HANDLING ====================
+  
+  useFocusEffect(
+    useCallback(() => {
+      console.log('🎯 Screen focused - restoring all data');
+      
+      const restoreOnFocus = async () => {
+        await loadPersistedData();
+        if (bookingId) {
+          await fetchBookingDetails(true);
+        }
+        if (routeCoordsRef.current.length > 0) {
+          setForceRenderKey(prev => prev + 1);
+          console.log('🔄 Forced map re-render');
+        }
+        if (pickupCoordRef.current && bookingRef.current?.driver?.id && !isListeningToDriver) {
+          console.log('🔄 Re-attaching driver listener on focus');
+          startListeningToDriverLocation();
+        }
+        if (rideStageRef.current === 'driver_to_pickup' && driverCoordRef.current && pickupCoordRef.current) {
+          calculateDistanceAndETAForPickup();
+        } else if (rideStageRef.current === 'pickup_to_drop' && driverCoordRef.current && dropCoordRef.current) {
+          calculateDistanceAndETAForDrop();
+        }
+      };
+      
+      restoreOnFocus();
+      
+      return () => {
+        console.log('📱 Screen unfocused - keeping data in memory');
+      };
+    }, [bookingId])
+  );
+
+  // Load all data on mount
+  useEffect(() => {
+    const initializeScreen = async () => {
+      await loadPersistedData();
+      await fetchBookingDetails();
+    };
+    
+    initializeScreen();
+    
+    const appStateSubscription = AppState.addEventListener('change', (nextAppState) => {
+      if (nextAppState === 'active') {
+        console.log('🔄 App became active, refreshing data');
+        loadPersistedData();
+        fetchBookingDetails(true);
+      }
+    });
+    
+    return () => {
+      appStateSubscription.remove();
+    };
+  }, []);
+
+  // Persist data when it changes
+  useEffect(() => {
+    if (booking) {
+      persistBookingData();
+    }
+  }, [booking]);
+
+  useEffect(() => {
+    if (routeCoords.length > 0) {
+      persistRouteData();
+    }
+  }, [routeCoords]);
+
+  useEffect(() => {
+    if (pickupCoord && dropCoord) {
+      persistPickupDropCoords();
+    }
+  }, [pickupCoord, dropCoord]);
 
   // Geocode addresses when booking loads
   useEffect(() => {
-    if (booking) {
+    if (booking && !pickupCoord && !dropCoord) {
       geocodeAddresses();
     }
   }, [booking]);
@@ -172,24 +1041,16 @@ const TrackRideScreen = () => {
     }
   }, [booking?.status]);
 
-  // Auto-zoom to driver when location is first received
-  useEffect(() => {
-    if (driverCoord && isMapReady && !isManuallyInteracting) {
-      centerMapOnDriver();
-    }
-  }, [driverCoord, isMapReady]);
-
   // Start listening to driver location when ready
   useEffect(() => {
-    if (pickupCoord && !isCancelled && booking?.driver?.id) {
+    if (pickupCoord && booking?.driver?.id) {
       startListeningToDriverLocation();
-      printAllActiveDrivers();
     }
     
     return () => {
       stopListeningToDriverLocation();
     };
-  }, [pickupCoord, booking?.driver?.id, isCancelled]);
+  }, [pickupCoord, booking?.driver?.id]);
 
   // Calculate distances based on current stage
   useEffect(() => {
@@ -211,24 +1072,95 @@ const TrackRideScreen = () => {
     }
   }, [distanceToPickup, rideStage]);
 
-  // ==================== ROUTE MANAGEMENT ====================
+  // Update map when coordinates change
+  useEffect(() => {
+    if (isMapReady && driverCoord) {
+      updateMapDriverLocation(driverCoord.latitude, driverCoord.longitude, driverBearing);
+    }
+  }, [driverCoord, driverBearing, isMapReady]);
+
+  useEffect(() => {
+    if (isMapReady && pickupCoord) {
+      updateMapPickupLocation(pickupCoord.latitude, pickupCoord.longitude);
+    }
+  }, [pickupCoord, isMapReady]);
+
+  useEffect(() => {
+    if (isMapReady && dropCoord) {
+      updateMapDropLocation(dropCoord.latitude, dropCoord.longitude);
+    }
+  }, [dropCoord, isMapReady]);
+
+  useEffect(() => {
+    if (isMapReady && routeCoords.length > 0) {
+      const routeData = {
+        distance: routeDistance.toFixed(1),
+        duration: routeDuration.toString()
+      };
+      updateMapRoute(routeCoords, rideStage === 'pickup_to_drop', routeData);
+    }
+  }, [routeCoords, rideStage, isMapReady]);
+
+  // ==================== ENHANCED ROUTE MANAGEMENT ====================
   
   const updateRouteForStage = async (stage: RideStage) => {
     if (stage === 'driver_to_pickup' && driverCoord && pickupCoord) {
+      // Get main route
       const routePoints = await getRoute(driverCoord, pickupCoord);
-      setRouteCoords(routePoints);
+      if (routePoints.length > 0) {
+        setRouteCoords(routePoints);
+        routeCoordsRef.current = routePoints;
+        await persistRouteData();
+        
+        // Calculate route distance and duration
+        const directionsData = await getDirections(driverCoord, pickupCoord);
+        if (directionsData) {
+          setRouteDistance(directionsData.distance);
+          setRouteDuration(directionsData.duration);
+        }
+        
+        if (isMapReady) {
+          const routeData = {
+            distance: routeDistance.toFixed(1),
+            duration: routeDuration.toString()
+          };
+          updateMapRoute(routePoints, false, routeData);
+          fitMapBounds([driverCoord, pickupCoord, ...routePoints]);
+        }
+      }
     } else if (stage === 'pickup_to_drop' && pickupCoord && dropCoord) {
+      // Get main route
       const routePoints = await getRoute(pickupCoord, dropCoord);
-      setRouteCoords(routePoints);
-      
-      const directionsResponse = await fetch(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${pickupCoord.latitude},${pickupCoord.longitude}&destination=${dropCoord.latitude},${dropCoord.longitude}&key=${GOOGLE_MAPS_API_KEY}`
-      );
-      const data = await directionsResponse.json();
-      if (data.status === 'OK' && data.routes[0]?.legs[0]) {
-        const leg = data.routes[0].legs[0];
-        setRouteDistance(leg.distance.value / 1000);
-        setRouteDuration(Math.ceil(leg.duration.value / 60));
+      if (routePoints.length > 0) {
+        setRouteCoords(routePoints);
+        routeCoordsRef.current = routePoints;
+        await persistRouteData();
+        
+        // Calculate route distance and duration
+        const directionsData = await getDirections(pickupCoord, dropCoord);
+        if (directionsData) {
+          setRouteDistance(directionsData.distance);
+          setRouteDuration(directionsData.duration);
+          
+          // Try to get alternative route
+          try {
+            const altRoute = await getAlternativeRoute(pickupCoord, dropCoord);
+            if (altRoute && altRoute.length > 0 && isMapReady) {
+              drawAlternativeRoute(altRoute, '#FF6B6B');
+            }
+          } catch (e) {
+            console.log('No alternative route available');
+          }
+        }
+        
+        if (isMapReady) {
+          const routeData = {
+            distance: routeDistance.toFixed(1),
+            duration: routeDuration.toString()
+          };
+          updateMapRoute(routePoints, true, routeData);
+          fitMapBounds([pickupCoord, dropCoord, ...routePoints]);
+        }
       }
     }
   };
@@ -236,17 +1168,59 @@ const TrackRideScreen = () => {
   const getRoute = async (origin: Coordinate, destination: Coordinate): Promise<Coordinate[]> => {
     try {
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=${GOOGLE_MAPS_API_KEY}`
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=${GOOGLE_MAPS_API_KEY}&alternatives=false`
       );
       const data = await response.json();
       
       if (data.status === 'OK' && data.routes.length > 0) {
-        return decodePolyline(data.routes[0].overview_polyline.points);
+        const points = decodePolyline(data.routes[0].overview_polyline.points);
+        console.log('📍 Got route points:', points.length);
+        return points;
       }
       return [];
     } catch (error) {
       console.error('Directions API error:', error);
       return [];
+    }
+  };
+
+  const getAlternativeRoute = async (origin: Coordinate, destination: Coordinate): Promise<Coordinate[]> => {
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=${GOOGLE_MAPS_API_KEY}&alternatives=true`
+      );
+      const data = await response.json();
+      
+      if (data.status === 'OK' && data.routes.length > 1) {
+        const points = decodePolyline(data.routes[1].overview_polyline.points);
+        console.log('📍 Got alternative route points:', points.length);
+        return points;
+      }
+      return [];
+    } catch (error) {
+      console.error('Alternative route error:', error);
+      return [];
+    }
+  };
+
+  const getDirections = async (origin: Coordinate, destination: Coordinate) => {
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=${GOOGLE_MAPS_API_KEY}`
+      );
+      const data = await response.json();
+      
+      if (data.status === 'OK' && data.routes[0]?.legs[0]) {
+        const leg = data.routes[0].legs[0];
+        return {
+          distance: leg.distance.value / 1000, // in km
+          duration: Math.ceil(leg.duration.value / 60) // in minutes
+        };
+      }
+      return null;
+    } catch (error) {
+      console.error('Directions API error:', error);
+      return null;
     }
   };
 
@@ -326,27 +1300,14 @@ const TrackRideScreen = () => {
 
   // ==================== FIREBASE FUNCTIONS ====================
   
-  const printAllActiveDrivers = async () => {
-    console.log('\n========== ACTIVE DRIVERS FROM FIREBASE ==========');
-    try {
-      const activeDriversRef = ref(database, 'active_drivers');
-      const snapshot = await get(activeDriversRef);
-      
-      if (snapshot.exists()) {
-        const data = snapshot.val();
-        console.log(`✅ Total Active Drivers: ${Object.keys(data).length}`);
-      } else {
-        console.log('❌ No active drivers found');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-
   const startListeningToDriverLocation = () => {
     if (!booking?.driver?.id) {
       console.warn('No driver ID available');
       return;
+    }
+
+    if (driverLocationListenerRef.current) {
+      stopListeningToDriverLocation();
     }
 
     const driverId = booking.driver.id;
@@ -366,14 +1327,14 @@ const TrackRideScreen = () => {
           timestamp: location.timestamp || Date.now()
         };
         
-        if (lastDriverLocationRef.current) {
-          animateDriverMovement(lastDriverLocationRef.current, newLocation);
-        } else {
-          setDriverCoord({
-            latitude: newLocation.latitude,
-            longitude: newLocation.longitude
-          });
-          setDriverBearing(newLocation.heading || 0);
+        setDriverCoord({
+          latitude: newLocation.latitude,
+          longitude: newLocation.longitude
+        });
+        setDriverBearing(newLocation.heading || 0);
+        
+        if (isMapReady) {
+          updateMapDriverLocation(newLocation.latitude, newLocation.longitude, newLocation.heading || 0);
         }
         
         lastDriverLocationRef.current = newLocation;
@@ -384,56 +1345,11 @@ const TrackRideScreen = () => {
     });
   };
 
-  const animateDriverMovement = (from: DriverLocation, to: DriverLocation) => {
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
-    }
-    
-    const startTime = Date.now();
-    const duration = 1000;
-    
-    const startLat = from.latitude;
-    const startLng = from.longitude;
-    const endLat = to.latitude;
-    const endLng = to.longitude;
-    const startBearing = from.heading || 0;
-    const endBearing = to.heading || 0;
-    
-    const animate = () => {
-      const now = Date.now();
-      const elapsed = now - startTime;
-      const progress = Math.min(1, elapsed / duration);
-      
-      const easeProgress = 1 - Math.pow(1 - progress, 3);
-      
-      const currentLat = startLat + (endLat - startLat) * easeProgress;
-      const currentLng = startLng + (endLng - startLng) * easeProgress;
-      const currentBearing = startBearing + (endBearing - startBearing) * easeProgress;
-      
-      setDriverCoord({
-        latitude: currentLat,
-        longitude: currentLng
-      });
-      setDriverBearing(currentBearing);
-      
-      if (progress < 1) {
-        animationFrameRef.current = requestAnimationFrame(animate);
-      }
-    };
-    
-    animationFrameRef.current = requestAnimationFrame(animate);
-  };
-
   const stopListeningToDriverLocation = () => {
     if (driverLocationListenerRef.current && booking?.driver?.id) {
       const driverLocationRef = ref(database, `active_drivers/${booking.driver.id}`);
       off(driverLocationRef);
       driverLocationListenerRef.current = null;
-    }
-    
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
-      animationFrameRef.current = null;
     }
     
     setIsListeningToDriver(false);
@@ -478,11 +1394,15 @@ const TrackRideScreen = () => {
     
     if (pickup) setPickupCoord(pickup);
     if (drop) setDropCoord(drop);
+    
+    if (pickup && drop) {
+      fitMapBounds([pickup, drop]);
+    }
   };
 
-  const fetchBookingDetails = async () => {
+  const fetchBookingDetails = async (silent = false) => {
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
       
       const formData = new FormData();
       formData.append('booking_id', bookingId);
@@ -498,16 +1418,23 @@ const TrackRideScreen = () => {
         
         if (bookingData) {
           setBooking(bookingData);
+          bookingRef.current = bookingData;
           setDebugInfo(`Booking loaded: ${bookingData.id}`);
-        } else {
+          await persistBookingData();
+          console.log('✅ Booking details refreshed');
+        } else if (response.data.data[0]) {
           setBooking(response.data.data[0]);
+          bookingRef.current = response.data.data[0];
+          await persistBookingData();
         }
       }
     } catch (error) {
       console.error('Booking fetch error: ', error);
-      Alert.alert('Error', 'Failed to load booking details');
+      if (!silent) {
+        Alert.alert('Error', 'Failed to load booking details');
+      }
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -535,6 +1462,10 @@ const TrackRideScreen = () => {
 
       if (response.data && response.data.success) {
         stopListeningToDriverLocation();
+        clearMapRoute();
+        await AsyncStorage.removeItem(`booking_${bookingId}`);
+        await AsyncStorage.removeItem(`route_${bookingId}`);
+        await AsyncStorage.removeItem(`coordinates_${bookingId}`);
         Alert.alert('Success', 'Ride cancelled successfully');
         navigation.goBack();
       } else {
@@ -547,40 +1478,25 @@ const TrackRideScreen = () => {
     }
   };
 
-  const handleMapInteractionStart = () => {
-    setIsManuallyInteracting(true);
-    if (manualInteractionTimeout) clearTimeout(manualInteractionTimeout);
-  };
-
-  const handleMapInteractionEnd = () => {
-    manualInteractionTimeout = setTimeout(() => {
-      setIsManuallyInteracting(false);
-    }, 3000);
-  };
-
-  const centerMapOnDriver = () => {
-    if (driverCoord && mapRef.current) {
-      mapRef.current.animateToRegion({
-        latitude: driverCoord.latitude,
-        longitude: driverCoord.longitude,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
-      }, 500);
-      setIsManuallyInteracting(false);
-    }
-  };
-
-  const getStatusDisplay = (status: string) => {
-    const statusMap: { [key: string]: string } = {
-      'pending': 'Booking Confirmed',
-      'driver_assigned': 'Driver Assigned',
-      'vehicle_assigned': 'Vehicle Assigned',
-      'arrived': 'Trip Started',
-      'ongoing': 'Trip Ongoing',
-      'completed': 'Trip Completed',
-      'cancelled': 'Cancelled',
-    };
-    return statusMap[status?.toLowerCase()] || status || 'Processing';
+  const navigateToChat = () => {
+    navigation.push('Chat', {
+      driver: {
+        id: booking?.driver?.id,
+        name: booking?.driver?.name,
+        phone: booking?.driver?.phone,
+        driver_id: booking?.driver?.id
+      },
+      booking: {
+        id: booking?.id,
+        from_location: booking?.from_location,
+        to_location: booking?.to_location
+      },
+      onBack: () => {
+        console.log('Coming back from chat, refreshing data');
+        loadPersistedData();
+        fetchBookingDetails(true);
+      }
+    });
   };
 
   const getDriverName = () => booking?.driver?.name || 'Driver not assigned';
@@ -590,8 +1506,6 @@ const TrackRideScreen = () => {
     }
     return 'Vehicle not assigned';
   };
-  const getPickupLocation = () => booking?.from_location || 'Not available';
-  const getDropLocation = () => booking?.to_location || 'Not available';
   const getCarNumber = () => booking?.vehicle?.vehicle_number || 'Not assigned';
   const getSeats = () => booking?.vehicle_class ? `${booking.vehicle_class.allowed_passengers} seats` : 'Not specified';
   const getTotalFare = () => booking?.total_fee ? `$${booking.total_fee}` : 'Calculating...';
@@ -600,7 +1514,7 @@ const TrackRideScreen = () => {
   const isDriverEnRoute = rideStage === 'driver_to_pickup' && driverCoord && pickupCoord && distanceToPickup !== null && distanceToPickup > 0.1;
   const isTripActive = rideStage === 'pickup_to_drop' && driverCoord && dropCoord;
 
-  if (loading) {
+  if (loading && !isDataRestored) {
     return (
       <View style={[styles.masterLayout, styles.centeredLoadingIndicator]}>
         <ActivityIndicator size="large" color="#F5A623" />
@@ -613,7 +1527,6 @@ const TrackRideScreen = () => {
     <View style={styles.masterLayout}>
       <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
 
-     
       {/* ETA Banner */}
       {!isCancelled && (
         <>
@@ -647,56 +1560,55 @@ const TrackRideScreen = () => {
         </>
       )}
 
-      {/* Map View - No Tags, Just Route and Driver */}
-      <View style={styles.mapContainer}>
-        <MapView
-          ref={mapRef}
-          style={styles.map}
-          provider={PROVIDER_GOOGLE}
-          showsUserLocation={false}
-          showsMyLocationButton={false}
-          showsTraffic={false}
-          showsCompass={false}
-          showsScale={false}
-          showsBuildings={false}
-          showsPointsOfInterest={false}
-          showsIndoors={false}
-          onMapReady={() => setIsMapReady(true)}
-          onTouchStart={handleMapInteractionStart}
-          onTouchEnd={handleMapInteractionEnd}
-          onPanDrag={handleMapInteractionStart}
-          initialRegion={{
-            latitude: 37.7749,
-            longitude: -122.4194,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.01,
-          }}
-        >
-          {/* Route Polyline only - No pickup/drop markers */}
-          {routeCoords.length > 0 && (
-            <Polyline
-              coordinates={routeCoords}
-              strokeColor={rideStage === 'pickup_to_drop' ? "#34C759" : "#F5A623"}
-              strokeWidth={4}
-              strokeDashArray={rideStage === 'driver_to_pickup' ? [10, 5] : []}
-              lineCap="round"
-              lineJoin="round"
-            />
-          )}
+      {/* Route Info Banner */}
+      {routeCoords.length > 0 && routeDistance > 0 && (
+        <View style={styles.routeInfoBanner}>
+          <Text style={styles.routeInfoText}>
+            🛣️ {routeDistance.toFixed(1)} km • {routeDuration} min
+          </Text>
+        </View>
+      )}
 
-          {/* Driver Marker Only */}
-          {driverCoord && !isCancelled && (
-            <Marker 
-              coordinate={driverCoord} 
-              anchor={{ x: 0.5, y: 0.5 }}
-              rotation={driverBearing}
-            >
-              <View style={styles.carMarker}>
-                <MovingCarIcon />
-              </View>
-            </Marker>
-          )}
-        </MapView>
+      {/* Map Error Banner */}
+      {mapError && (
+        <View style={styles.errorBanner}>
+          <Text style={styles.errorText}>⚠️ {mapError}</Text>
+          <TouchableOpacity 
+            style={styles.retryButton}
+            onPress={() => setForceRenderKey(prev => prev + 1)}
+          >
+            <Text style={styles.retryButtonText}>Retry</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {/* Map WebView */}
+      <View style={styles.mapContainer}>
+        <WebView
+          key={`webview-${forceRenderKey}`}
+          ref={webViewRef}
+          source={{ html: getMapHTML(GOOGLE_MAPS_API_KEY) }}
+          style={styles.map}
+          javaScriptEnabled={true}
+          domStorageEnabled={true}
+          onMessage={handleWebViewMessage}
+          onError={(error) => {
+            console.error('WebView error:', error);
+            setMapError('WebView failed to load');
+            setTimeout(() => setForceRenderKey(prev => prev + 1), 5000);
+          }}
+          onLoadStart={() => console.log('WebView loading...')}
+          onLoadEnd={() => console.log('WebView loaded')}
+          onLoadProgress={({ nativeEvent }) => {
+            if (nativeEvent.progress === 1) {
+              console.log('WebView fully loaded');
+            }
+          }}
+          scrollEnabled={false}
+          containerStyle={{ flex: 1 }}
+          cacheEnabled={false}
+          cacheMode="LOAD_NO_CACHE"
+        />
 
         {/* Center Button */}
         {!isCancelled && isListeningToDriver && isManuallyInteracting && driverCoord && (
@@ -716,9 +1628,8 @@ const TrackRideScreen = () => {
         )}
       </View>
 
-      {/* Bottom Sheet - Driver Details Here */}
+      {/* Bottom Sheet - Driver Details */}
       <View style={[styles.bottomCardSheetWrapper, { paddingBottom: Math.max(insets.bottom, 24) }]}>
-        {/* Driver Profile Card */}
         <View style={styles.profileDataRowContainer}>
           <View style={styles.avatarPlaceholderBadge}>
             <DriverPlaceholderAvatar />
@@ -742,7 +1653,7 @@ const TrackRideScreen = () => {
             <View style={styles.actionCommsButtonsGrid}>
               <TouchableOpacity 
                 style={styles.messageBubbleCircleBtn} 
-                onPress={() => Linking.openURL(`sms:${booking?.driver?.phone}`)}
+                onPress={navigateToChat}
               >
                 <ChatBubbleIcon />
               </TouchableOpacity>
@@ -758,11 +1669,6 @@ const TrackRideScreen = () => {
 
         <View style={styles.horizontalHairlineSeparator} />
 
-       
-
-        <View style={styles.horizontalHairlineSeparator} />
-
-        {/* Metrics Grid */}
         <View style={styles.metaMetricsHorizontalFlexRow}>
           <View style={styles.metricDataColumnNode}>
             <Text style={styles.metricColumnLabelHeading}>Total Fare</Text>
@@ -770,7 +1676,7 @@ const TrackRideScreen = () => {
           </View>
           <View style={styles.metricDataColumnNode}>
             <Text style={styles.metricColumnLabelHeading}>Distance</Text>
-            <Text style={styles.metricColumnValueDigit}>{routeDistance.toFixed(1)} km</Text>
+            <Text style={styles.metricColumnValueDigit}>{booking?.distance || '0'} Mile</Text>
           </View>
           <View style={styles.metricDataColumnNode}>
             <Text style={styles.metricColumnLabelHeading}>Seats</Text>
@@ -797,34 +1703,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     marginTop: 12,
     fontSize: 14,
-  },
-  topStatusBarContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 110,
-    backgroundColor: '#000000',
-    borderBottomLeftRadius: 32,
-    borderBottomRightRadius: 32,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-    zIndex: 15,
-  },
-  backButtonTrigger: {
-    padding: 4,
-    marginRight: 16,
-  },
-  topHeaderStatusHeadline: {
-    color: '#F5A623',
-    fontSize: 20,
-    fontWeight: '600',
-    letterSpacing: 0.3,
-    flex: 1,
-  },
-  refreshButton: {
-    padding: 8,
   },
   etaBanner: {
     position: 'absolute',
@@ -869,19 +1747,31 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
   },
+  routeInfoBanner: {
+    position: 'absolute',
+    top: 140,
+    left: 20,
+    right: 20,
+    backgroundColor: 'rgba(28, 28, 30, 0.95)',
+    borderRadius: 12,
+    padding: 10,
+    alignItems: 'center',
+    zIndex: 16,
+    borderWidth: 1,
+    borderColor: '#F5A623',
+  },
+  routeInfoText: {
+    color: '#F5A623',
+    fontSize: 14,
+    fontWeight: '600',
+  },
   mapContainer: {
     flex: 1,
+    backgroundColor: '#1C1C1E',
   },
   map: {
-    width: '100%',
-    height: '100%',
-  },
-  carMarker: {
-    backgroundColor: '#000000',
-    padding: 8,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: '#F5A623',
+    flex: 1,
+    backgroundColor: '#1C1C1E',
   },
   centerButton: {
     position: 'absolute',
@@ -933,6 +1823,36 @@ const styles = StyleSheet.create({
   },
   tripLiveText: {
     color: '#34C759',
+  },
+  errorBanner: {
+    position: 'absolute',
+    top: 180,
+    left: 20,
+    right: 20,
+    backgroundColor: '#FF3B30',
+    borderRadius: 12,
+    padding: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    zIndex: 17,
+  },
+  errorText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    flex: 1,
+  },
+  retryButton: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    borderRadius: 8,
+    marginLeft: 12,
+  },
+  retryButtonText: {
+    color: '#FF3B30',
+    fontWeight: '600',
+    fontSize: 12,
   },
   bottomCardSheetWrapper: {
     position: 'absolute',
@@ -1020,58 +1940,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#1C1C1E',
     width: '100%',
   },
-  tripDetailsContainer: {
-    marginVertical: 16,
-  },
-  locationRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginVertical: 8,
-  },
-  pickupBadge: {
-    backgroundColor: '#34C759',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
-    marginRight: 12,
-    minWidth: 65,
-  },
-  dropBadge: {
-    backgroundColor: '#FF3B30',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
-    marginRight: 12,
-    minWidth: 65,
-  },
-  badgeDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#FFFFFF',
-    marginRight: 6,
-  },
-  dropDot: {
-    backgroundColor: '#FFFFFF',
-  },
-  badgeText: {
-    color: '#FFFFFF',
-    fontSize: 10,
-    fontWeight: '700',
-  },
-  locationText: {
-    color: '#E5E5EA',
-    fontSize: 13,
-    fontWeight: '500',
-    flex: 1,
-  },
-  dottedLine: {
-    height: 20,
-    width: 2,
-    backgroundColor: '#48484A',
-    marginLeft: 32,
-    marginVertical: 4,
-  },
   metaMetricsHorizontalFlexRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -1093,27 +1961,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '700',
     marginTop: 6,
-  },
-  primaryCancelActionBtn: {
-    width: '100%',
-    backgroundColor: '#FF453A',
-    borderRadius: 28,
-    height: 56,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 4,
-    marginBottom: 10,
-    shadowColor: '#FF453A',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  cancelActionBtnLabelText: {
-    color: '#000000',
-    fontSize: 18,
-    fontWeight: '700',
-    letterSpacing: 0.2,
   },
 });
 

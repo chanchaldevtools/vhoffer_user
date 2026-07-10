@@ -11,11 +11,14 @@ import {
   ActivityIndicator,
   Animated,
   Platform,
+  Modal,
 } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Svg, { Path, Circle, Rect } from 'react-native-svg';
+import RenderHtml from 'react-native-render-html';
+import { useWindowDimensions } from 'react-native';
 import apiClient from '../services/apiConfig';
 
 // SVG Icons
@@ -33,26 +36,6 @@ const ArrowRightIcon = ({ color = "#A0A0A0", size = 14 }) => (
   </Svg>
 );
 
-const UserIcon = ({ color = "#E67E22", size = 20 }) => (
-  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2">
-    <Path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-    <Circle cx="12" cy="7" r="4" />
-  </Svg>
-);
-
-const PhoneIcon = ({ color = "#E67E22", size = 20 }) => (
-  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2">
-    <Path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
-  </Svg>
-);
-
-const MailIcon = ({ color = "#E67E22", size = 20 }) => (
-  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2">
-    <Rect x="2" y="4" width="20" height="16" rx="2" />
-    <Path d="m22 7-10 7L2 7" />
-  </Svg>
-);
-
 const CarWhiteIcon = ({ color = "#FFFFFF", size = 20 }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2">
     <Path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" />
@@ -61,9 +44,22 @@ const CarWhiteIcon = ({ color = "#FFFFFF", size = 20 }) => (
   </Svg>
 );
 
+const CheckIcon = ({ color = "#FFFFFF", size = 16 }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="3">
+    <Path d="M20 6L9 17l-5-5" />
+  </Svg>
+);
+
+const CloseIcon = ({ color = "#FFFFFF", size = 24 }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2">
+    <Path d="M18 6L6 18M6 6l12 12" />
+  </Svg>
+);
+
 export default function PickupInfoScreen() {
   const navigation = useNavigation();
   const route = useRoute();
+  const { width } = useWindowDimensions();
   
   const [bookingFor, setBookingFor] = useState<'myself' | 'someone_else'>('myself');
   const [notes, setNotes] = useState('');
@@ -72,6 +68,12 @@ export default function PickupInfoScreen() {
   const [toastMessage, setToastMessage] = useState('');
   const [toastType, setToastType] = useState<'success' | 'error'>('success');
   const toastOpacity = useState(new Animated.Value(0))[0];
+  
+  // Terms and Conditions States
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [termsModalVisible, setTermsModalVisible] = useState(false);
+  const [legalContent, setLegalContent] = useState({ title: '', body: '' });
+  const [isLoadingLegal, setIsLoadingLegal] = useState(false);
   
   // State for "someone else" fields
   const [otherName, setOtherName] = useState('');
@@ -91,6 +93,48 @@ export default function PickupInfoScreen() {
       Animated.delay(3000),
       Animated.timing(toastOpacity, { toValue: 0, duration: 300, useNativeDriver: true }),
     ]).start();
+  };
+
+  // Fetch Terms and Conditions
+  const fetchTermsAndConditions = async () => {
+    setIsLoadingLegal(true);
+    try {
+      const formData = new FormData();
+      formData.append('content_for', 'terms_and_conditions');
+      
+      const response = await apiClient.post('/legal-content/get', formData, {
+        headers: { 
+          'Content-Type': 'multipart/form-data',
+          'Accept': 'application/json'
+        },
+      });
+      
+      console.log('Legal content response:', response.data);
+      
+      if (response.data && response.data.success) {
+        let content = '';
+        if (response.data.data.terms_and_conditions) {
+          content = response.data.data.terms_and_conditions.content || '';
+        }
+        
+        setLegalContent({ title: 'Terms and Conditions', body: content });
+      } else {
+        showToast('Failed to load terms and conditions', 'error');
+        setTermsModalVisible(false);
+      }
+    } catch (error) {
+      console.error('Error fetching legal content:', error);
+      showToast('Failed to load terms. Please try again.', 'error');
+      setTermsModalVisible(false);
+    } finally {
+      setIsLoadingLegal(false);
+    }
+  };
+
+  // Open Terms Modal
+  const openTermsModal = () => {
+    setTermsModalVisible(true);
+    fetchTermsAndConditions();
   };
 
   // Format time to H:i format (24-hour format)
@@ -134,8 +178,19 @@ export default function PickupInfoScreen() {
     return '2024-02-20';
   };
 
+  // Strip HTML tags for plain text fallback
+  const stripHtml = (html: string) => {
+    if (!html) return '';
+    return html.replace(/<[^>]*>/g, '');
+  };
+
   const handleContinue = async () => {
     // Validation
+    if (!termsAccepted) {
+      Alert.alert('Terms Required', 'Please accept the Terms and Conditions to continue');
+      return;
+    }
+
     if (bookingFor === 'someone_else') {
       if (!otherName || !otherPhone) {
         Alert.alert('Validation Error', 'Please fill passenger name and phone number');
@@ -148,15 +203,6 @@ export default function PickupInfoScreen() {
     try {
       const formattedPickupTime = formatTimeForAPI(bookingData.pickupTime);
       const formattedDate = formatDateForAPI(bookingData.date);
-      
-      let bookingTypeValue = '';
-      if (bookingData.bookingType === 'ONE_WAY') {
-        bookingTypeValue = 'one_way';
-      } else if (bookingData.bookingType === 'BY_HOUR') {
-        bookingTypeValue = 'hourly';
-      } else if (bookingData.bookingType === 'BY_AIRPORT') {
-        bookingTypeValue = 'airport';
-      }
       
       const createBookingPayload = {
         booking_type: bookingData.bookingType === 'ONE_WAY' ? 'Point to Point' : 
@@ -196,17 +242,6 @@ export default function PickupInfoScreen() {
       const response = await apiClient.post('/create-booking', createBookingPayload);
       
       if (response.data && response.data.status === true) {
-        const pickupInfo = {
-          bookingFor: bookingFor,
-          notes: notes,
-          reference: reference,
-          bookingData: bookingData,
-          vehicleData: selectedVehicle,
-          bookingResponse: response.data,
-          bookingId: response.data.booking_id,
-          timestamp: new Date().toISOString(),
-        };
-
         console.log('================== BOOKING SUCCESS ==================');
         console.log('Booking ID:', response.data.booking_id);
         console.log('======================================================');
@@ -277,6 +312,83 @@ export default function PickupInfoScreen() {
     }
   };
 
+  // Custom renderer for HTML content
+  const renderHtmlContent = () => {
+    if (!legalContent.body) {
+      return (
+        <Text style={styles.modalBodyText}>No content available.</Text>
+      );
+    }
+
+    // Check if content contains HTML tags
+    const hasHtmlTags = /<[a-z][\s\S]*>/i.test(legalContent.body);
+    
+    if (hasHtmlTags) {
+      return (
+        <RenderHtml
+          contentWidth={width - 40}
+          source={{ html: legalContent.body }}
+          tagsStyles={{
+            p: {
+              color: '#E5E5EA',
+              fontSize: 14,
+              lineHeight: 22,
+              marginBottom: 12,
+            },
+            h1: {
+              color: '#FFFFFF',
+              fontSize: 24,
+              fontWeight: 'bold',
+              marginBottom: 12,
+            },
+            h2: {
+              color: '#FFFFFF',
+              fontSize: 20,
+              fontWeight: 'bold',
+              marginBottom: 10,
+            },
+            h3: {
+              color: '#FFFFFF',
+              fontSize: 18,
+              fontWeight: '600',
+              marginBottom: 8,
+            },
+            ul: {
+              marginBottom: 12,
+              paddingLeft: 20,
+            },
+            ol: {
+              marginBottom: 12,
+              paddingLeft: 20,
+            },
+            li: {
+              color: '#E5E5EA',
+              fontSize: 14,
+              lineHeight: 22,
+              marginBottom: 4,
+            },
+            strong: {
+              color: '#FFFFFF',
+              fontWeight: 'bold',
+            },
+            a: {
+              color: '#E67E22',
+              textDecorationLine: 'underline',
+            },
+            br: {
+              marginBottom: 8,
+            },
+          }}
+        />
+      );
+    } else {
+      // Plain text fallback
+      return (
+        <Text style={styles.modalBodyText}>{legalContent.body}</Text>
+      );
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
@@ -295,7 +407,7 @@ export default function PickupInfoScreen() {
       {/* Main Content (Dark Background) */}
       <ScrollView style={styles.contentContainer} bounces={false}>
         
-        {/* Simple Progress Line (Without Dots) */}
+        {/* Simple Progress Line */}
         <View style={styles.progressContainer}>
           <View style={[styles.progressSegment, styles.progressActive]} />
           <View style={[styles.progressSegment, styles.progressActive]} />
@@ -364,47 +476,6 @@ export default function PickupInfoScreen() {
           <Text style={styles.radioLabel}>Book for someone else</Text>
         </TouchableOpacity>
 
-        {/* Someone Else Fields */}
-        {bookingFor === 'someone_else' && (
-          <View style={styles.someoneElseContainer}>
-            <View style={styles.someoneElseInputWrapper}>
-              <UserIcon color="#E67E22" size={20} />
-              <TextInput
-                style={styles.someoneElseInput}
-                placeholder="Full Name"
-                placeholderTextColor="#8E8E93"
-                value={otherName}
-                onChangeText={setOtherName}
-              />
-            </View>
-            
-            <View style={styles.someoneElseInputWrapper}>
-              <PhoneIcon color="#E67E22" size={20} />
-              <TextInput
-                style={styles.someoneElseInput}
-                placeholder="Phone Number"
-                placeholderTextColor="#8E8E93"
-                keyboardType="phone-pad"
-                value={otherPhone}
-                onChangeText={setOtherPhone}
-              />
-            </View>
-            
-            <View style={styles.someoneElseInputWrapper}>
-              <MailIcon color="#E67E22" size={20} />
-              <TextInput
-                style={styles.someoneElseInput}
-                placeholder="Email (Optional)"
-                placeholderTextColor="#8E8E93"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                value={otherEmail}
-                onChangeText={setOtherEmail}
-              />
-            </View>
-          </View>
-        )}
-
         {/* Additional Info Section */}
         <Text style={styles.sectionTitle}>Provide additional information</Text>
 
@@ -435,12 +506,37 @@ export default function PickupInfoScreen() {
           Booking for business? This will appear on the invoice.
         </Text>
 
+        {/* Terms and Conditions Checkbox */}
+        <View style={styles.termsContainer}>
+          <TouchableOpacity 
+            style={styles.termsCheckboxRow}
+            onPress={() => setTermsAccepted(!termsAccepted)}
+            activeOpacity={0.7}
+          >
+            <View style={[styles.termsCheckbox, termsAccepted && styles.termsCheckboxActive]}>
+              {termsAccepted && <CheckIcon color="#FFFFFF" size={14} />}
+            </View>
+            <Text style={styles.termsText}>
+              I agree to the{' '}
+              <Text 
+                style={styles.termsLink} 
+                onPress={openTermsModal}
+              >
+                Terms and Conditions
+              </Text>
+            </Text>
+          </TouchableOpacity>
+        </View>
+
         {/* Confirm Button */}
         <TouchableOpacity 
-          style={[styles.continueButton, isSubmitting && styles.disabledButton]} 
+          style={[
+            styles.continueButton, 
+            (isSubmitting || !termsAccepted) && styles.disabledButton
+          ]} 
           activeOpacity={0.8}
           onPress={handleContinue}
-          disabled={isSubmitting}
+          disabled={isSubmitting || !termsAccepted}
         >
           {isSubmitting ? (
             <ActivityIndicator color="#FFFFFF" size="small" />
@@ -453,6 +549,49 @@ export default function PickupInfoScreen() {
         </TouchableOpacity>
 
       </ScrollView>
+
+      {/* Terms and Conditions Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={termsModalVisible}
+        onRequestClose={() => setTermsModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Terms and Conditions</Text>
+              <TouchableOpacity 
+                onPress={() => setTermsModalVisible(false)}
+                style={styles.modalCloseButton}
+              >
+                <CloseIcon color="#FFFFFF" size={20} />
+              </TouchableOpacity>
+            </View>
+            
+            {isLoadingLegal ? (
+              <View style={styles.modalLoadingContainer}>
+                <ActivityIndicator size="large" color="#E67E22" />
+                <Text style={styles.modalLoadingText}>Loading terms...</Text>
+              </View>
+            ) : (
+              <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
+                {renderHtmlContent()}
+              </ScrollView>
+            )}
+            
+            <TouchableOpacity 
+              style={styles.modalAcceptButton}
+              onPress={() => {
+                setTermsAccepted(true);
+                setTermsModalVisible(false);
+              }}
+            >
+              <Text style={styles.modalAcceptButtonText}>Accept Terms</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       {/* Toast Notification */}
       <Animated.View style={[styles.toastContainer, { opacity: toastOpacity, backgroundColor: toastType === 'success' ? '#2E7D32' : '#C62828' }]}>
@@ -619,27 +758,6 @@ const styles = StyleSheet.create({
     color: '#E5E5EA',
     fontSize: 15,
   },
-  someoneElseContainer: {
-    marginBottom: 20,
-    backgroundColor: '#1C1C1E',
-    borderRadius: 16,
-    padding: 12,
-  },
-  someoneElseInputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#2C2C2E',
-    borderRadius: 12,
-    marginBottom: 12,
-    paddingHorizontal: 12,
-    gap: 12,
-  },
-  someoneElseInput: {
-    flex: 1,
-    color: '#FFFFFF',
-    fontSize: 14,
-    paddingVertical: 12,
-  },
   textArea: {
     backgroundColor: '#48484A',
     borderRadius: 16,
@@ -665,6 +783,40 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 4,
   },
+  // Terms and Conditions Styles
+  termsContainer: {
+    marginTop: 8,
+    marginBottom: 16,
+  },
+  termsCheckboxRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  termsCheckbox: {
+    width: 20,
+    height: 20,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: '#AEAEB2',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  termsCheckboxActive: {
+    backgroundColor: '#E67E22',
+    borderColor: '#E67E22',
+  },
+  termsText: {
+    color: '#E5E5EA',
+    fontSize: 14,
+    flex: 1,
+  },
+  termsLink: {
+    color: '#E67E22',
+    fontWeight: '600',
+    textDecorationLine: 'underline',
+  },
   continueButton: {
     backgroundColor: '#E67E22',
     borderRadius: 28,
@@ -677,7 +829,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   disabledButton: {
-    backgroundColor: '#A0A0A0',
+    backgroundColor: '#48484A',
     opacity: 0.7,
   },
   continueButtonText: {
@@ -699,6 +851,68 @@ const styles = StyleSheet.create({
   toastText: {
     color: '#FFFFFF',
     fontSize: 14,
+    fontWeight: '600',
+  },
+  // Modal Styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    backgroundColor: '#1C1C1E',
+    borderRadius: 24,
+    width: '90%',
+    maxHeight: '80%',
+    padding: 20,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#3A3A3C',
+  },
+  modalTitle: {
+    color: '#FFFFFF',
+    fontSize: 20,
+    fontWeight: '700',
+  },
+  modalCloseButton: {
+    padding: 4,
+  },
+  modalContent: {
+    maxHeight: 400,
+    marginBottom: 20,
+  },
+  modalBodyText: {
+    color: '#E5E5EA',
+    fontSize: 14,
+    lineHeight: 22,
+  },
+  modalLoadingContainer: {
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 16,
+  },
+  modalLoadingText: {
+    color: '#AEAEB2',
+    fontSize: 14,
+  },
+  modalAcceptButton: {
+    backgroundColor: '#E67E22',
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  modalAcceptButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
     fontWeight: '600',
   },
 });

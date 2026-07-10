@@ -107,7 +107,7 @@ export default function VehicleSelectionScreen() {
         let formattedDate = data.date;
         if (data.selectedDate) {
           const dateObj = new Date(data.selectedDate);
-          formattedDate = dateObj.toLocaleDateString('en-GB');
+          formattedDate = dateObj.toISOString().split('T')[0];
         }
         
         response = await apiClient.post('/pricing/hourly', {
